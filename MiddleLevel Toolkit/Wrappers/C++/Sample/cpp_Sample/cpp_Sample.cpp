@@ -1,5 +1,5 @@
-#include "cpp_Connection.h"
-#include "cpp_Wrapper.h"
+#include "../../cpp_Connection.h"
+#include "../../cpp_Wrapper.h"
 
 cpp_Connection cppConnection("192.168.15.8", 81);
 cpp_Wrapper wrapper;
