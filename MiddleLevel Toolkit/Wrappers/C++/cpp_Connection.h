@@ -1,5 +1,5 @@
-#ifndef CPP_CONNECTION_H
-#define CPP_CONNECTION_H
+#ifndef Cpp_Connection_H
+#define Cpp_Connection_H
 
 #include <cpprest/ws_client.h>
 #include <iostream>

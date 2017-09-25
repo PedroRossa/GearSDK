@@ -1,8 +1,10 @@
-#ifndef CPP_WRAPPER_H
-#define CPP_WRAPPER_H
+#ifndef Cpp_Wrapper_H
+#define Cpp_Wrapper_H
 
 #include <cpprest/json.h>
 #include <iostream>
+
+#include "Sample\cpp_Sample\Gear_Button_cpp.h"
 
 using namespace std;
 using namespace web;
@@ -10,14 +12,34 @@ using namespace utility;
 
 class cpp_Wrapper
 {
+
+#pragma region Attributes
+
 	string data;
 	json::value jsonValue;
+	json::value header;
+
+	vector<Gear_Button_cpp> buttons;
+
+#pragma endregion
+
+#pragma region Private Methods
 
 	bool ParseDataToJson();
+	bool ParseJsonToData();
+
+#pragma endregion
 
 public:
+
+#pragma region Constructors
+
 	cpp_Wrapper();
 	~cpp_Wrapper();
+
+#pragma endregion
+
+#pragma region Getters and Setters
 
 	void SetData(string data);
 	string GetData();
@@ -27,7 +49,26 @@ public:
 	float GetFloat(string key);
 	string GetString(string key);
 	json::object GetObject(string key);
-	
+
+	int* Get_xyz_Int(string key);
+	int* Get_xyzw_Int(string key);
+
+	float* Get_xyz_Float(string key);
+	float* Get_xyzw_Float(string key);
+
+#pragma endregion
+
+#pragma region Public Methods
+
+	json::value StringToJson(string data);
+	string JsonToString(json::value json);
+
+	void Init(string header);
+
+	void UpdateObjects();
+
+#pragma endregion
+
 };
 
 #endif

@@ -6,6 +6,10 @@ cpp_Wrapper wrapper;
 
 int atualNumberOfMessages = 0;
 
+bool button_0_state;
+float accelerometer_val[3] = { 0,0,0 };
+float gyro_val[4] = { 0,0,0,0 };
+
 void main()
 {
 	try
@@ -32,20 +36,53 @@ void main()
 			{
 				atualNumberOfMessages = cppConnection.GetNumberOfMessagesReceived();
 				//cout << cppConnection.ReceivedMessage() << endl;
-
-				//AQUI FALTA TRATAR PRA O WRAPPER PRA PEGAR CERTINHO OS VALORES E CASO NAO TENHA NAO ESTOURAR EXEPETION
-
+				
 				wrapper.SetData(cppConnection.ReceivedMessage());
 
+				button_0_state = wrapper.GetBool("button_0");
+
+				float* accel = wrapper.Get_xyz_Float("accelerometer");
+
+				if (accel != NULL)
+				{
+					accelerometer_val[0] = accel[0];
+					accelerometer_val[1] = accel[1];
+					accelerometer_val[2] = accel[2];
+				}
+					cout << "Accelerometer is NULL" << endl;
+
+				float* gyro = wrapper.Get_xyz_Float("gyro");
+
+				if (gyro != NULL)
+				{
+					gyro_val[0] = gyro[0];
+					gyro_val[1] = gyro[1];
+					gyro_val[2] = gyro[2];
+				}
+				else
+					cout << "Gyro is NULL" << endl;
+
+
 				cout << "------ Buttons ------" << endl;
-				cout << " Button_0 : " << wrapper.GetBool("button_0") << endl;
+				cout << " Button_0 : " << button_0_state << endl;
 				cout << "---------------------" << endl << endl;
 
 				cout << "--- Accelerometer ---" << endl;
-				//cout << " Accelerometer : " << wrapper.GetObject("accelerometer").at(U("x")).as_double() << endl;
+				cout << "(" << accelerometer_val[0] << "," << accelerometer_val[1] << "," << accelerometer_val[2] << ")" << endl;
+				cout << "---------------------" << endl;
+
+				cout << "------- Gyro --------" << endl;
+				cout << "(" << gyro_val[0] << "," << gyro_val[1] << "," << gyro_val[2] << ")" << endl;
 				cout << "---------------------" << endl;
 
 				system("cls");
+
+
+				if (button_0_state)
+				{
+					int v[3] = { 1023,0,1023 };
+				}
+
 			}
 
 			//forced disconnetion
