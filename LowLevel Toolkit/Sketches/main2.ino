@@ -16,16 +16,16 @@ void StartMPU()
 
 void SetJSON()
 {
-    data["button_0"] = button_0.GetState();
+    j_data["button_0"] = button_0.GetState();
     //jsonRoot["button_1"] = button_1_State;
     
-    gyro["x"] = g_mpu.GetGyro()[0];
-    gyro["y"] = g_mpu.GetGyro()[1];
-    gyro["z"] = g_mpu.GetGyro()[2];
+    j_gyro["x"] = g_mpu.GetGyro()[0];
+    j_gyro["y"] = g_mpu.GetGyro()[1];
+    j_gyro["z"] = g_mpu.GetGyro()[2];
     
-    accelerometer["x"] = g_mpu.GetAccelerometer()[0];
-    accelerometer["y"] = g_mpu.GetAccelerometer()[1];
-    accelerometer["z"] = g_mpu.GetAccelerometer()[2];
+    j_accelerometer["x"] = g_mpu.GetAccelerometer()[0];
+    j_accelerometer["y"] = g_mpu.GetAccelerometer()[1];
+    j_accelerometer["z"] = g_mpu.GetAccelerometer()[2];
 
     parserJSON = "";
     jsonRoot.printTo(parserJSON);
@@ -62,12 +62,19 @@ void loop()
 
     rgbLed.update();
 
-    if(button_0.GetState() == HIGH)
-        rgbLed.SetColor(random(0,1023),random(0,1023),random(0,1023));
+    //if(button_0.GetState() == HIGH)
+    //    rgbLed.SetColor(random(0,1023),random(0,1023),random(0,1023));
 
-    SetJSON();
-    webSocket.sendTXT(0, parserJSON);
-    
+    if(!headerReceivedByClient)
+    {
+        webSocket.sendTXT(0, header_parserJSON);
+    }
+    else
+    {
+        SetJSON();
+        webSocket.sendTXT(0, parserJSON);
+    }
+
     WebServerLoop();
 
     //24 fps
@@ -88,6 +95,13 @@ void webSocketEvent(uint8_t num, int type, uint8_t* payload, size_t length)
 
             // send message to client
             webSocket.sendTXT(num, "Hi, software :)");
+            
+            //Reset the boolean to control the header
+            headerReceivedByClient = false;
+
+            //SET HEADER TO send
+            header_parserJSON = "";
+            header_jsonRoot.printTo(header_parserJSON);
         }
             break;
         case WStype_TEXT:
@@ -99,6 +113,10 @@ void webSocketEvent(uint8_t num, int type, uint8_t* payload, size_t length)
                 // webSocket.sendTXT(num, parserJSON);
                 webSocket.sendTXT(num,"hi");
             }
+            else if(payload[0] == '@') //Header Handshake
+            {
+                headerReceivedByClient = true;
+            }
             else if(payload[0] == '#') {
                 // we get RGB data
 
@@ -108,6 +126,10 @@ void webSocketEvent(uint8_t num, int type, uint8_t* payload, size_t length)
                 //analogWrite(redPin,    ((rgb >> 16) & 0xFF));
                 //analogWrite(greenPin,  ((rgb >> 8) & 0xFF));
                 //analogWrite(bluePin,   ((rgb >> 0) & 0xFF));
+            }
+            else if(payload[0] == '{') { //JSON
+                json = (const char *)&payload;
+                Serial.println(json);
             }
 
             break;

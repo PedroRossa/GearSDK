@@ -182,7 +182,7 @@ void Gear_MPU6050::readRawMPU()
     gyro[1] = Wire.read() << 8;
     gyro[1] |= Wire.read();
     gyro[2] = Wire.read() << 8;
-    gyro[2] |= Wire.read();                                   
+    gyro[2] |= Wire.read();                                  
 }
 
 #pragma endregion

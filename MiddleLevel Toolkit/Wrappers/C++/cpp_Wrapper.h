@@ -5,6 +5,7 @@
 #include <iostream>
 
 #include "Sample\cpp_Sample\Gear_Button_cpp.h"
+#include "Sample\cpp_Sample\Gear_RGBLed_cpp.h"
 
 using namespace std;
 using namespace web;
@@ -19,17 +20,21 @@ class cpp_Wrapper
 	json::value jsonValue;
 	json::value header;
 
+	bool headerSetted = false;
+
 	vector<Gear_Button_cpp> buttons;
+	vector<Gear_RGBLed_cpp> rgbLeds;
 
 #pragma endregion
 
 #pragma region Private Methods
 
-	bool ParseDataToJson();
-	bool ParseJsonToData();
+	Gear_Button_cpp CreateButton(json::value values);
+
+	Gear_RGBLed_cpp CreateRGBLed(json::value values);
 
 #pragma endregion
-
+	
 public:
 
 #pragma region Constructors
@@ -41,8 +46,15 @@ public:
 
 #pragma region Getters and Setters
 
+	bool HeaderSetted();
+
 	void SetData(string data);
 	string GetData();
+
+
+	Gear_Button_cpp GetButton(int id);
+	Gear_RGBLed_cpp GetRGBLed(int id);
+
 
 	bool GetBool(string key);
 	int GetInt(string key);
