@@ -6,8 +6,9 @@ Gear_RGBLed_cpp::Gear_RGBLed_cpp()
 {
 }
 
-Gear_RGBLed_cpp::Gear_RGBLed_cpp(string name, string pin_r, string pin_g, string pin_b, LedMode mode, int r_value, int g_value, int b_value)
+Gear_RGBLed_cpp::Gear_RGBLed_cpp(int id, string name, string pin_r, string pin_g, string pin_b, LedMode mode, int r_value, int g_value, int b_value)
 {
+	this->id = id;
 	this->name = name;
 
 	this->pin_r = pin_r;
@@ -27,6 +28,8 @@ Gear_RGBLed_cpp::~Gear_RGBLed_cpp()
 #pragma endregion
 
 #pragma region Getters and Setters
+
+int Gear_RGBLed_cpp::GetId() { return this->id; }
 
 string Gear_RGBLed_cpp::GetName() { return this->name; }
 string Gear_RGBLed_cpp::Get_R_Pin() { return this->pin_r; }
@@ -86,9 +89,11 @@ string Gear_RGBLed_cpp::UpdatedJsonValue()
         }
       }*/
 
+	string stringMode = LedModesMap.find(to_string(this->mode))->first;
+
 	string val = "{\"name\":\"" + this->name + "\",";
 	val += "\"pin\":\"" + this->pin_r + "," + this->pin_g + "," + this->pin_b + "\",";
-	val += "\"mode\":\"" + to_string(this->mode) + "\",";
+	val += "\"mode\":\"" + stringMode + "\",";
 	val += "\"value\": {\"r\":" + to_string(this->r_value) + ", \"g\":" + to_string(this->g_value) + ", \"b\":" + to_string(this->b_value);
 	val += "}}";
 

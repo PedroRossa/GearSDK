@@ -53,7 +53,6 @@ void main()
 				
 				wrapper.SetData(cppConnection.ReceivedMessage());
 
-				button_0_state = wrapper.GetBool("button_0");
 				/*
 				button_0_state = wrapper.GetBool("button_0");
 
@@ -95,6 +94,8 @@ void main()
 				*/
 
 				//if (wrapper.GetButton(0).GetState())
+				button_0_state = wrapper.GetButton(0).GetState();
+
 				if(button_0_state)
 				{
 					wrapper.GetRGBLed(0).SetRGB_Value(1023, 0, 1023);

@@ -9,6 +9,7 @@ private:
 
 #pragma region Attributes
 
+	int id;
 	string name;
 
 	string pin_r;
@@ -28,13 +29,14 @@ public:
 #pragma region Constructors
 
 	Gear_RGBLed_cpp();
-	Gear_RGBLed_cpp(string name, string pin_r, string pin_g, string pin_b, LedMode mode = LedMode::STATIC, int r_value = 1023, int g_value = 1023, int b_value = 1023);
+	Gear_RGBLed_cpp(int id, string name, string pin_r, string pin_g, string pin_b, LedMode mode = LedMode::STATIC, int r_value = 1023, int g_value = 1023, int b_value = 1023);
 	~Gear_RGBLed_cpp();
 
 #pragma endregion
 
 #pragma region Getters and Setters
 
+	int GetId();
 	string GetName();
 	string Get_R_Pin();
 	string Get_G_Pin();

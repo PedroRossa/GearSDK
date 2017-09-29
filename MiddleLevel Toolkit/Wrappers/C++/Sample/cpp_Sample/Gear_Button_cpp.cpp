@@ -6,8 +6,9 @@ Gear_Button_cpp::Gear_Button_cpp()
 {
 }
 
-Gear_Button_cpp::Gear_Button_cpp(string name, string pin, bool state, ButtonType type)
+Gear_Button_cpp::Gear_Button_cpp(int id, string name, string pin, bool state, ButtonType type)
 {
+	this->id = id;
 	this->name = name;
 	this->pin = pin;
 	this->state = state;
@@ -21,6 +22,8 @@ Gear_Button_cpp::~Gear_Button_cpp()
 #pragma endregion
 
 #pragma region Getters and Setters
+
+int Gear_Button_cpp::GetId() { return this->id; }
 
 string Gear_Button_cpp::GetName() { return this->name; }
 string Gear_Button_cpp::GetPin() { return this->pin; }

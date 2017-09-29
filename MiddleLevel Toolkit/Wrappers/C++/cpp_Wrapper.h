@@ -51,22 +51,8 @@ public:
 	void SetData(string data);
 	string GetData();
 
-
 	Gear_Button_cpp GetButton(int id);
 	Gear_RGBLed_cpp GetRGBLed(int id);
-
-
-	bool GetBool(string key);
-	int GetInt(string key);
-	float GetFloat(string key);
-	string GetString(string key);
-	json::object GetObject(string key);
-
-	int* Get_xyz_Int(string key);
-	int* Get_xyzw_Int(string key);
-
-	float* Get_xyz_Float(string key);
-	float* Get_xyzw_Float(string key);
 
 #pragma endregion
 
