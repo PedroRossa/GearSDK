@@ -220,11 +220,67 @@ void cpp_Wrapper::Init(string header)
 
 				for (size_t i = 0; i < rgbLeds.size(); i++)
 					this->rgbLeds.push_back(CreateRGBLed(rgbLeds[i]));
-
 			}
 			catch (const std::exception& e)
 			{
 				cout << "Exception: " << e.what() << " OR don't have buttons" << endl;
+			}
+		}
+		catch (const std::exception& e)
+		{
+			cout << "Exception: " << e.what() << endl;
+		}
+	}
+}
+
+void cpp_Wrapper::UpdateObjects(string data)
+{
+	//TODO: FAZER AQUI O UPDATE DOS OBJETOS CRIADOS, A PARTIR DO JSON RECEBIDO POR WEBSOCKET
+	// PRECISA MUDAR O FORMATO DO JSON QUE EH ENVIADO COM O DATA VALUE
+	// ELE TEM QUE CONTAR TODOS OS OBJETOS DENTRO DE ARRAYS E COM TODOS OS DADOS CRUCIAIS
+
+	this->jsonValue = StringToJson(data);
+
+	if (this->jsonValue != NULL)
+	{
+		try
+		{
+			auto data = this->jsonValue.at(U("data"));
+			try
+			{
+				/*{
+					"name": "button_0",
+					"pin": "D2",
+					"state": false,
+					"type" : "PUSH_BUTTON"
+				},*/
+				string_t t_key = conversions::to_string_t("buttons");
+
+				json::array data_buttons = data.at(t_key).as_array();
+
+				for (size_t i = 0; i < this->buttons.size(); i++)
+				{
+					string btnPath = "button_" + to_string(i);
+					string_t btns = conversions::to_string_t(btnPath);
+
+					bool state = data_buttons[i].at(btns).as_bool();
+					this->buttons[i].SetState(state);
+				}
+
+				/*{
+				"name": "rgb_led_0",
+				"pin" : "D3,D4,D5",
+				"mode" : "BLINKING",
+				"value" : {
+				"r": 0,
+				"g" : 1023,
+				"b" : 0
+				}*/
+
+			}
+			catch (const std::exception& e)
+			{
+				cout << "Exception: " << e.what() << endl;
 			}
 
 		}
@@ -234,15 +290,8 @@ void cpp_Wrapper::Init(string header)
 			cout << "Exception: " << e.what() << endl;
 		}
 
-		
-	}
-}
 
-void cpp_Wrapper::UpdateObjects()
-{
-	//TODO: FAZER AQUI O UPDATE DOS OBJETOS CRIADOS, A PARTIR DO JSON RECEBIDO POR WEBSOCKET
-	// PRECISA MUDAR O FORMATO DO JSON QUE EH ENVIADO COM O DATA VALUE
-	// ELE TEM QUE CONTAR TODOS OS OBJETOS DENTRO DE ARRAYS E COM TODOS OS DADOS CRUCIAIS
+	}
 }
 
 #pragma endregion

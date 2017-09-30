@@ -16,7 +16,7 @@ void StartMPU()
 
 void SetJSON()
 {
-    j_data["button_0"] = button_0.GetState();
+    j_buttons[0]["button_0"] = button_0.GetState();
     //jsonRoot["button_1"] = button_1_State;
     
     j_gyro["x"] = g_mpu.GetGyro()[0];

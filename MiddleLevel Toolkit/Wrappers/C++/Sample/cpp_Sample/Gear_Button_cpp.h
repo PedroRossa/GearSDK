@@ -35,6 +35,8 @@ public:
 	bool GetState();
 	ButtonType GetType();
 
+	void SetState(bool state);
+
 #pragma endregion
 
 };

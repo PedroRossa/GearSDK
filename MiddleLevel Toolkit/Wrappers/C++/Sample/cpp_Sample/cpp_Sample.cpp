@@ -51,7 +51,7 @@ void main()
 
 				//cout << cppConnection.ReceivedMessage() << endl;
 				
-				wrapper.SetData(cppConnection.ReceivedMessage());
+				wrapper.UpdateObjects(cppConnection.ReceivedMessage());
 
 				/*
 				button_0_state = wrapper.GetBool("button_0");
@@ -100,6 +100,7 @@ void main()
 				{
 					wrapper.GetRGBLed(0).SetRGB_Value(1023, 0, 1023);
 					string s = wrapper.GetRGBLed(0).UpdatedJsonValue();
+				    //TODO: REFAZER O JSON DE DATA
 					
 				}
 				else

@@ -30,4 +30,7 @@ string Gear_Button_cpp::GetPin() { return this->pin; }
 bool Gear_Button_cpp::GetState() { return this->state; }
 ButtonType Gear_Button_cpp::GetType() { return this->type; }
 
+
+void Gear_Button_cpp::SetState(bool state) { this->state = state; }
+
 #pragma endregion

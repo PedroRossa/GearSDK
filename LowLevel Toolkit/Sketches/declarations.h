@@ -24,17 +24,17 @@ JsonObject& header_jsonRoot = header_jsonBuffer.parseObject(header_json);
 String header_parserJSON;
 //-------------------------
 
-
-const size_t bufferSize = JSON_OBJECT_SIZE(1) + 2*JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(4) + JSON_OBJECT_SIZE(7) + 140;
+const size_t bufferSize = JSON_ARRAY_SIZE(1) + JSON_ARRAY_SIZE(4) + 6*JSON_OBJECT_SIZE(1) + 2*JSON_OBJECT_SIZE(3) + 2*JSON_OBJECT_SIZE(4) + 160;
 DynamicJsonBuffer jsonBuffer(bufferSize);
 
-const char* json = "{\"data\":{\"button_0\":0,\"button_1\":0,\"button_2\":0,\"button_3\":0,\"gyro\":{\"x\":0,\"y\":0,\"z\":0,\"w\":0},\"accelerometer\":{\"x\":0,\"y\":0,\"z\":0},\"rgb_led\":{\"r\":1023,\"g\":1023,\"b\":1023}}}";
+const char* json = "{\"data\":{\"buttons\":[{\"button_0\":false},{\"button_1\":false},{\"button_2\":false},{\"button_3\":false}],\"rgb_leds\":[{\"rgb_led_0\":{\"r\":1023,\"g\":1023,\"b\":1023}}],\"gyro\":{\"x\":0,\"y\":0,\"z\":0,\"w\":0},\"accelerometer\":{\"x\":0,\"y\":0,\"z\":0}}}";
 
 JsonObject& jsonRoot = jsonBuffer.parseObject(json);
 
 JsonObject& j_data = jsonRoot["data"];
+JsonArray& j_buttons = j_data["buttons"];
+JsonArray& j_rgbLeds = j_data["rgb_leds"];
 JsonObject& j_gyro = j_data["gyro"];
 JsonObject& j_accelerometer = j_data["accelerometer"];
-JsonObject& j_rgbLed = j_data["rgb_led"];
 
 String parserJSON;

@@ -63,7 +63,7 @@ public:
 
 	void Init(string header);
 
-	void UpdateObjects();
+	void UpdateObjects(string data);
 
 #pragma endregion
 
