@@ -5,7 +5,9 @@
 #include <iostream>
 
 #include "Sample\cpp_Sample\Gear_Button_cpp.h"
+#include "Sample\cpp_Sample\Gear_Potentiometer_cpp.h"
 #include "Sample\cpp_Sample\Gear_RGBLed_cpp.h"
+#include "Sample\cpp_Sample\Gear_MPU6050_cpp.h"
 
 using namespace std;
 using namespace web;
@@ -22,16 +24,19 @@ class cpp_Wrapper
 
 	bool headerSetted = false;
 
-	vector<Gear_Button_cpp> buttons;
-	vector<Gear_RGBLed_cpp> rgbLeds;
+	vector<Gear_Button_cpp*> buttons;
+	vector<Gear_Potentiometer_cpp*> potentiometers;
+	vector<Gear_RGBLed_cpp*> rgbLeds;
+	vector<Gear_MPU6050_cpp*> mpus;
 
 #pragma endregion
 
 #pragma region Private Methods
 
-	Gear_Button_cpp CreateButton(json::value values);
-
-	Gear_RGBLed_cpp CreateRGBLed(json::value values);
+	Gear_Button_cpp* CreateButton(json::value values);
+	Gear_Potentiometer_cpp* CreatePotentiometer(json::value values);
+	Gear_RGBLed_cpp* CreateRGBLed(json::value values);
+	Gear_MPU6050_cpp* CreateMPU6050(json::value values);
 
 #pragma endregion
 	
@@ -51,8 +56,10 @@ public:
 	void SetData(string data);
 	string GetData();
 
-	Gear_Button_cpp GetButton(int id);
-	Gear_RGBLed_cpp GetRGBLed(int id);
+	Gear_Button_cpp* GetButton(int id);
+	Gear_Potentiometer_cpp* GetPotentiometer(int id);
+	Gear_RGBLed_cpp* GetRGBLed(int id);
+	Gear_MPU6050_cpp* GetMPU6050(int id);
 
 #pragma endregion
 
@@ -60,9 +67,9 @@ public:
 
 	json::value StringToJson(string data);
 	string JsonToString(json::value json);
-
+	
 	void Init(string header);
-
+	
 	void UpdateObjects(string data);
 
 #pragma endregion

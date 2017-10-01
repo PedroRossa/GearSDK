@@ -27,6 +27,7 @@ private:
     int16_t accelerometer[3];
     int16_t gyro[3];
     int16_t temperature;
+    double angle[3];
 
 #pragma endregion
 
@@ -52,6 +53,11 @@ public:
     int16_t* GetGyro();
     int16_t GetTemperature();
 
+    double* GetAngle();
+    double GetAngleX();
+    double GetAngleY();
+    double GetAngleZ();
+
     //Public Methods
     void initI2C();
     void initMPU();
@@ -59,6 +65,8 @@ public:
     void checkMPU(int mpu_addr);
     
     void readRawMPU();
+
+    void CalculateAngles();
 };
 
 #endif

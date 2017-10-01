@@ -14,12 +14,6 @@ enum ButtonType
 	STATE_BUTTON = 1
 };
 
-static map<string, ButtonType> ButtonTypesMap =
-{
-	{ "PUSH_BUTTON", PUSH_BUTTON },
-	{ "STATE_BUTTON", STATE_BUTTON }
-};
-
 enum LedMode
 {
 	STATIC = 0,
@@ -29,14 +23,6 @@ enum LedMode
 	FADING = 4
 };
 
-static map<string, LedMode> LedModesMap =
-{
-	{ "STATIC", STATIC },
-	{ "BLINK", BLINK },
-	{ "BLINKING", BLINKING },
-	{ "FADE", FADE },
-	{ "FADING", FADING }
-};
 
 static vector<string> split(const string& str, const string& delim)
 {

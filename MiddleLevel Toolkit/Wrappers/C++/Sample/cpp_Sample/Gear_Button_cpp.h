@@ -13,7 +13,7 @@ private:
 	string name;
 	string pin;
 	bool state;
-	ButtonType type;
+	int type;
 
 #pragma endregion
 
@@ -22,7 +22,7 @@ public:
 #pragma region Constructors
 
 	Gear_Button_cpp();
-	Gear_Button_cpp(int id, string name, string pin, bool state = false, ButtonType type = ButtonType::PUSH_BUTTON);
+	Gear_Button_cpp(int id, string name, string pin, bool state = false, int type = ButtonType::PUSH_BUTTON);
 	~Gear_Button_cpp();
 
 #pragma endregion
@@ -33,7 +33,7 @@ public:
 	string GetName();
 	string GetPin();
 	bool GetState();
-	ButtonType GetType();
+	int GetType();
 
 	void SetState(bool state);
 

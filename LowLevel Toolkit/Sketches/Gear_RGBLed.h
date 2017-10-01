@@ -80,7 +80,7 @@ public:
     void SetG_Pin(int g_pin);
     void SetB_Pin(int b_pin);
 
-    void SetMode(LedMode mode, int timeOn = 0, int timeOff = 0);
+    void SetMode(LedMode mode, int timeOn = 0, int timeOff = 0, bool state = HIGH);
 
     Gear_Color GetColor();
     

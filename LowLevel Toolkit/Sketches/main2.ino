@@ -1,11 +1,6 @@
 #include "declarations.h"
 #include "Gear_Server.h"
 
-Gear_WiFiConnection wifi(SSID, PASSWORD);
-Gear_MPU6050 g_mpu(MPU_ADDR);
-Gear_Button button_0(D7);
-Gear_RGBLed rgbLed(D1, D2, D3, LedMode::STATIC, true);
-
 void StartMPU()
 {
   Serial.println("\nStart MPU6050\n");
@@ -16,17 +11,38 @@ void StartMPU()
 
 void SetJSON()
 {
-    j_buttons[0]["button_0"] = button_0.GetState();
-    //jsonRoot["button_1"] = button_1_State;
-    
-    j_gyro["x"] = g_mpu.GetGyro()[0];
-    j_gyro["y"] = g_mpu.GetGyro()[1];
-    j_gyro["z"] = g_mpu.GetGyro()[2];
-    
-    j_accelerometer["x"] = g_mpu.GetAccelerometer()[0];
-    j_accelerometer["y"] = g_mpu.GetAccelerometer()[1];
-    j_accelerometer["z"] = g_mpu.GetAccelerometer()[2];
+    for(uint8_t i = 0 ; i < j_buttons.size(); i++)
+    {
+        //TODO: Pegar todos os botoes aqui!!!!
+        j_buttons[i]["state"] = button_0.GetState();
+    }
 
+    for(uint8_t i = 0; i < j_potentiometers.size(); i++)
+    {
+        j_potentiometers[i]["value"] = pot.GetValue();
+    }
+
+    for(uint8_t i = 0; i < j_mpus.size(); i++)
+    {    
+        int16_t* acell = g_mpu.GetAccelerometer();
+
+        j_mpus[i]["accel"]["x"] = acell[0];
+        j_mpus[i]["accel"]["y"] = acell[1];
+        j_mpus[i]["accel"]["z"] = acell[2];
+
+        int16_t* gyro = g_mpu.GetGyro();
+
+        j_mpus[i]["gyro"]["x"] = gyro[0];
+        j_mpus[i]["gyro"]["y"] = gyro[1];
+        j_mpus[i]["gyro"]["z"] = gyro[2];
+
+        double* angle = g_mpu.GetAngle();
+
+        j_mpus[i]["angle"]["x"] = angle[0];
+        j_mpus[i]["angle"]["y"] = angle[1];
+        j_mpus[i]["angle"]["z"] = angle[2];
+    }
+    
     parserJSON = "";
     jsonRoot.printTo(parserJSON);
 }
@@ -48,6 +64,8 @@ void setup()
     rgbLed.init();
     rgbLed.SetColor(1023,256,0);
 
+    pot.init();
+
     wifi.InitWiFi();
 
     ConfigWebServer();
@@ -59,11 +77,9 @@ void setup()
 void loop() 
 {
     g_mpu.readRawMPU();
+    g_mpu.CalculateAngles();
 
     rgbLed.update();
-
-    //if(button_0.GetState() == HIGH)
-    //    rgbLed.SetColor(random(0,1023),random(0,1023),random(0,1023));
 
     if(!headerReceivedByClient)
     {
@@ -105,7 +121,7 @@ void webSocketEvent(uint8_t num, int type, uint8_t* payload, size_t length)
         }
             break;
         case WStype_TEXT:
-            Serial.printf("[%u] get Text: %s\n", num, payload);
+            //Serial.printf("[%u] get Text: %s\n", num, payload);
 
             if(payload[0] == '_')
             {
@@ -128,8 +144,25 @@ void webSocketEvent(uint8_t num, int type, uint8_t* payload, size_t length)
                 //analogWrite(bluePin,   ((rgb >> 0) & 0xFF));
             }
             else if(payload[0] == '{') { //JSON
-                json = (const char *)&payload;
-                Serial.println(json);
+
+                StaticJsonBuffer<200> jsonBuffer;
+                JsonObject& root = jsonBuffer.parseObject(payload);
+
+                String name = root["name"].as<String>();
+                int mode = root["mode"];
+
+                if(name.indexOf("rgb_led") >= 0)
+                {
+                    int v1 = root["value"]["r"];
+                    int v2 = root["value"]["g"];
+                    int v3 = root["value"]["b"];
+
+                    rgbLed.SetColor(v1,v2,v3);
+
+                    
+                    rgbLed.SetMode((LedMode)mode, 800, 200);
+                }
+                //Serial.println(json);
             }
 
             break;

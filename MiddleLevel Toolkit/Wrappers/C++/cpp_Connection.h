@@ -3,6 +3,7 @@
 
 #include <cpprest/ws_client.h>
 #include <iostream>
+#include <ctime>
 
 using namespace web;
 using namespace web::websockets::client;

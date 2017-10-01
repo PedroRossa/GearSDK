@@ -6,7 +6,7 @@ Gear_RGBLed_cpp::Gear_RGBLed_cpp()
 {
 }
 
-Gear_RGBLed_cpp::Gear_RGBLed_cpp(int id, string name, string pin_r, string pin_g, string pin_b, LedMode mode, int r_value, int g_value, int b_value)
+Gear_RGBLed_cpp::Gear_RGBLed_cpp(int id, string name, string pin_r, string pin_g, string pin_b, int mode, int r_value, int g_value, int b_value, int timeOn, int timeOff)
 {
 	this->id = id;
 	this->name = name;
@@ -16,6 +16,9 @@ Gear_RGBLed_cpp::Gear_RGBLed_cpp(int id, string name, string pin_r, string pin_g
 	this->pin_b = pin_b;
 
 	this->mode = mode;
+	this->timeOn = timeOn;
+	this->timeOff = timeOff;
+
 	this->r_value = r_value;
 	this->g_value = g_value;
 	this->b_value = b_value;
@@ -36,7 +39,7 @@ string Gear_RGBLed_cpp::Get_R_Pin() { return this->pin_r; }
 string Gear_RGBLed_cpp::Get_G_Pin() { return this->pin_g; }
 string Gear_RGBLed_cpp::Get_B_Pin() { return this->pin_b; }
 
-LedMode Gear_RGBLed_cpp::GetMode() { return this->mode; }
+int Gear_RGBLed_cpp::GetMode() { return this->mode; }
 
 int Gear_RGBLed_cpp::Get_R_Value() { return this->r_value; }
 int Gear_RGBLed_cpp::Get_G_Value() { return this->g_value; }
@@ -52,6 +55,14 @@ int* Gear_RGBLed_cpp::GetRGB_Value()
 
 	return vals;
 }
+
+
+void Gear_RGBLed_cpp::SetMode(LedMode mode, int timeOn, int timeOff) 
+{ 
+	this->mode = mode; 
+	this->timeOn = timeOn;
+	this->timeOff = timeOff;
+};
 
 void Gear_RGBLed_cpp::Set_R_Value(int r_value) { this->r_value = r_value; }
 void Gear_RGBLed_cpp::Set_G_Value(int g_value) { this->g_value = g_value; }
@@ -75,9 +86,8 @@ void Gear_RGBLed_cpp::SetRGB_Value(int r, int g, int b)
 
 #pragma region Public Methods
 
-string Gear_RGBLed_cpp::UpdatedJsonValue()
+string Gear_RGBLed_cpp::UpdatedJson()
 {
-	//TODO: RESOLVER PROBLEMA DO PARSE DO ENUM, ESTA VOLTANDO UM NUMERO, PRECISA SER UMA STRING COM O VALOR
 	/*{
         "name": "rgb_led_0",
         "pin": "D3,D4,D5",
@@ -88,12 +98,9 @@ string Gear_RGBLed_cpp::UpdatedJsonValue()
           "b": 0
         }
       }*/
-
-	string stringMode = LedModesMap.find(to_string(this->mode))->first;
-
 	string val = "{\"name\":\"" + this->name + "\",";
 	val += "\"pin\":\"" + this->pin_r + "," + this->pin_g + "," + this->pin_b + "\",";
-	val += "\"mode\":\"" + stringMode + "\",";
+	val += "\"mode\":" + to_string(this->mode) + ",";
 	val += "\"value\": {\"r\":" + to_string(this->r_value) + ", \"g\":" + to_string(this->g_value) + ", \"b\":" + to_string(this->b_value);
 	val += "}}";
 

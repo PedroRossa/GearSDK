@@ -14,27 +14,34 @@ cpp_Wrapper::~cpp_Wrapper()
 
 #pragma region Private Methods
 
-Gear_Button_cpp cpp_Wrapper::CreateButton(json::value values)
+Gear_Button_cpp* cpp_Wrapper::CreateButton(json::value values)
 {
 	string name = utility::conversions::to_utf8string(values.at(U("name")).as_string());
 	string pin = utility::conversions::to_utf8string(values.at(U("pin")).as_string());
 	bool state = values.at(U("state")).as_bool();
-	string type = utility::conversions::to_utf8string(values.at(U("type")).as_string());
+	int type = values.at(U("type")).as_integer();
 
-	ButtonType btn_type = ButtonTypesMap[type];
-
-	Gear_Button_cpp btn(this->buttons.size(), name, pin, state, btn_type);
+	Gear_Button_cpp* btn = new Gear_Button_cpp(this->buttons.size(), name, pin, state, type);
 
 	return btn;
 }
 
-Gear_RGBLed_cpp cpp_Wrapper::CreateRGBLed(json::value values)
+Gear_Potentiometer_cpp* cpp_Wrapper::CreatePotentiometer(json::value values)
 {
 	string name = utility::conversions::to_utf8string(values.at(U("name")).as_string());
 	string pin = utility::conversions::to_utf8string(values.at(U("pin")).as_string());
+	int value = values.at(U("value")).as_integer();
 
-	string mode = utility::conversions::to_utf8string(values.at(U("mode")).as_string());
-	LedMode led_mode = LedModesMap[mode];
+	Gear_Potentiometer_cpp* pot = new Gear_Potentiometer_cpp(this->buttons.size(), name, pin, value);
+
+	return pot;
+}
+
+Gear_RGBLed_cpp* cpp_Wrapper::CreateRGBLed(json::value values)
+{
+	string name = utility::conversions::to_utf8string(values.at(U("name")).as_string());
+	string pin = utility::conversions::to_utf8string(values.at(U("pin")).as_string());
+	int mode = values.at(U("mode")).as_integer();
 
 
 	auto vals = values.at(U("value")).as_object();
@@ -44,17 +51,50 @@ Gear_RGBLed_cpp cpp_Wrapper::CreateRGBLed(json::value values)
 	i_vals[1] = vals.at(U("g")).as_integer();
 	i_vals[2] = vals.at(U("b")).as_integer();
 
-
-
 	vector<string> pins = split(pin, ",");
 
 	string pin_r = pins[0];
 	string pin_g = pins[1];
 	string pin_b = pins[2];
 
-	Gear_RGBLed_cpp rgbLed(this->rgbLeds.size(), name, pin_r, pin_g, pin_b, led_mode, i_vals[0], i_vals[1], i_vals[2]);
+	Gear_RGBLed_cpp* rgbLed = new Gear_RGBLed_cpp(this->rgbLeds.size(), name, pin_r, pin_g, pin_b, mode, i_vals[0], i_vals[1], i_vals[2]);
 
 	return rgbLed;
+}
+
+Gear_MPU6050_cpp* cpp_Wrapper::CreateMPU6050(json::value values)
+{
+	string name = utility::conversions::to_utf8string(values.at(U("name")).as_string());
+	string pin = utility::conversions::to_utf8string(values.at(U("pins")).as_string());
+	
+	vector<string> pins = split(pin, ",");
+	string pin_sda = pins[0];
+	string pin_scl = pins[1];
+
+	auto accel_vals = values.at(U("accel")).as_object();
+	int accel[3] = { 0,0,0 };
+
+	accel[0] = accel_vals.at(U("x")).as_integer();
+	accel[1] = accel_vals.at(U("y")).as_integer();
+	accel[2] = accel_vals.at(U("z")).as_integer();
+
+	auto gyro_vals = values.at(U("gyro")).as_object();
+	int gyro[3] = { 0,0,0 };
+
+	gyro[0] = gyro_vals.at(U("x")).as_integer();
+	gyro[1] = gyro_vals.at(U("y")).as_integer();
+	gyro[2] = gyro_vals.at(U("z")).as_integer();
+
+	auto angle_vals = values.at(U("angle")).as_object();
+	double angle[3] = { 0,0,0 };
+
+	angle[0] = angle_vals.at(U("x")).as_double();
+	angle[1] = angle_vals.at(U("y")).as_double();
+	angle[2] = angle_vals.at(U("z")).as_double();
+
+	Gear_MPU6050_cpp* mpu6050 = new Gear_MPU6050_cpp(this->mpus.size(), name, pin_sda, pin_scl, accel, gyro, angle);
+
+	return mpu6050;
 }
 
 #pragma endregion
@@ -68,9 +108,10 @@ void cpp_Wrapper::SetData(string data) { this->data = data; }
 string cpp_Wrapper::GetData() { return this->data; }
 
 
-Gear_Button_cpp cpp_Wrapper::GetButton(int id) { return this->buttons[id]; }
-Gear_RGBLed_cpp cpp_Wrapper::GetRGBLed(int id) { return this->rgbLeds[id]; }
-
+Gear_Button_cpp* cpp_Wrapper::GetButton(int id) { return this->buttons[id]; }
+Gear_Potentiometer_cpp* cpp_Wrapper::GetPotentiometer(int id) { return this->potentiometers[id]; }
+Gear_RGBLed_cpp* cpp_Wrapper::GetRGBLed(int id) { return this->rgbLeds[id]; }
+Gear_MPU6050_cpp* cpp_Wrapper::GetMPU6050(int id) { return this->mpus[id]; }
 
 #pragma endregion
 
@@ -180,65 +221,72 @@ void cpp_Wrapper::Init(string header)
 }
 	*/
 	
-	this->header = StringToJson(header);
-
-	if (this->header != NULL)
+	if (header[0] == '{') //if it's probably a json
 	{
-		try
+		this->header = StringToJson(header);
+
+		if (this->header != NULL)
 		{
-			auto data = this->header.at(U("header"));
-
-			this->headerSetted = true;
-
 			try
 			{
-				/*{
-					"name": "button_0",
-					"pin" : "D2",
-					"state" : false,
-					"type" : 0
-				}*/
-				string_t t_key = conversions::to_string_t("buttons");
+				auto data = this->header.at(U("header"));
 
-				json::array buttons = data.at(t_key).as_array();
+				this->headerSetted = true;
 
-				for (size_t i = 0; i < buttons.size(); i++)
-					this->buttons.push_back(CreateButton(buttons[i]));
+				try
+				{
+					//-------- buttons ------------
+					string_t t_key = conversions::to_string_t("buttons");
 
-				/*{
-					"name": "rgb_led_0",
-						"pin" : "D3,D4,D5",
-						"mode" : "BLINKING",
-						"value" : {
-						"r": 0,
-							"g" : 1023,
-							"b" : 0
-					}*/
-				t_key = conversions::to_string_t("rgb_leds");
+					json::array buttons = data.at(t_key).as_array();
 
-				json::array rgbLeds = data.at(t_key).as_array();
+					for (size_t i = 0; i < buttons.size(); i++)
+						this->buttons.push_back(CreateButton(buttons[i]));
+					//-----------------------------
 
-				for (size_t i = 0; i < rgbLeds.size(); i++)
-					this->rgbLeds.push_back(CreateRGBLed(rgbLeds[i]));
+
+					//-------- potentiometers ------------
+					t_key = conversions::to_string_t("potentiometers");
+
+					json::array pots = data.at(t_key).as_array();
+
+					for (size_t i = 0; i < pots.size(); i++)
+						this->potentiometers.push_back(CreatePotentiometer(pots[i]));
+					//------------------------------------
+
+					//-------- rgb leds ------------
+					t_key = conversions::to_string_t("rgb_leds");
+
+					json::array rgbLeds = data.at(t_key).as_array();
+
+					for (size_t i = 0; i < rgbLeds.size(); i++)
+						this->rgbLeds.push_back(CreateRGBLed(rgbLeds[i]));
+					//------------------------------
+
+					//--------- mpu6050 ------------
+					t_key = conversions::to_string_t("mpus");
+
+					json::array mpus = data.at(t_key).as_array();
+
+					for (size_t i = 0; i < mpus.size(); i++)
+						this->mpus.push_back(CreateMPU6050(mpus[i]));
+					//------------------------------
+				}
+				catch (const std::exception& e)
+				{
+					cout << "Exception: " << e.what() << " OR don't have buttons" << endl;
+				}
 			}
 			catch (const std::exception& e)
 			{
-				cout << "Exception: " << e.what() << " OR don't have buttons" << endl;
+				cout << "Exception: " << e.what() << endl;
 			}
-		}
-		catch (const std::exception& e)
-		{
-			cout << "Exception: " << e.what() << endl;
 		}
 	}
 }
 
 void cpp_Wrapper::UpdateObjects(string data)
 {
-	//TODO: FAZER AQUI O UPDATE DOS OBJETOS CRIADOS, A PARTIR DO JSON RECEBIDO POR WEBSOCKET
-	// PRECISA MUDAR O FORMATO DO JSON QUE EH ENVIADO COM O DATA VALUE
-	// ELE TEM QUE CONTAR TODOS OS OBJETOS DENTRO DE ARRAYS E COM TODOS OS DADOS CRUCIAIS
-
 	this->jsonValue = StringToJson(data);
 
 	if (this->jsonValue != NULL)
@@ -248,23 +296,68 @@ void cpp_Wrapper::UpdateObjects(string data)
 			auto data = this->jsonValue.at(U("data"));
 			try
 			{
-				/*{
-					"name": "button_0",
-					"pin": "D2",
-					"state": false,
-					"type" : "PUSH_BUTTON"
-				},*/
 				string_t t_key = conversions::to_string_t("buttons");
 
 				json::array data_buttons = data.at(t_key).as_array();
 
 				for (size_t i = 0; i < this->buttons.size(); i++)
 				{
-					string btnPath = "button_" + to_string(i);
-					string_t btns = conversions::to_string_t(btnPath);
+					string btn_state = "state";
+					string_t key = conversions::to_string_t(btn_state);
 
-					bool state = data_buttons[i].at(btns).as_bool();
-					this->buttons[i].SetState(state);
+					int state = data_buttons[i].at(key).as_integer();
+					this->buttons[i]->SetState((bool)state);
+				}
+				//--------------------------------------------------
+
+				t_key = conversions::to_string_t("potentiometers");
+
+				json::array data_pots = data.at(t_key).as_array();
+
+				for (size_t i = 0; i < this->potentiometers.size(); i++)
+				{
+					string pot_value = "value";
+					string_t key = conversions::to_string_t(pot_value);
+
+					int value = data_pots[i].at(key).as_integer();
+					this->potentiometers[i]->SetValue(value);
+				}
+
+				//--------------------------------------------------
+
+				t_key = conversions::to_string_t("mpus");
+
+				json::array data_mpus = data.at(t_key).as_array();
+
+				for (size_t i = 0; i < this->mpus.size(); i++)
+				{
+					string str_accel = "accel";
+					string_t key = conversions::to_string_t(str_accel);
+					
+					auto accel_vals = data_mpus[i].at(key).as_object();
+					int accel[3] = { 0,0,0 };
+
+					accel[0] = accel_vals.at(U("x")).as_integer();
+					accel[1] = accel_vals.at(U("y")).as_integer();
+					accel[2] = accel_vals.at(U("z")).as_integer();
+
+					auto gyro_vals = data_mpus[i].at(U("gyro")).as_object();
+					int gyro[3] = { 0,0,0 };
+
+					gyro[0] = gyro_vals.at(U("x")).as_integer();
+					gyro[1] = gyro_vals.at(U("y")).as_integer();
+					gyro[2] = gyro_vals.at(U("z")).as_integer();
+
+					auto angle_vals = data_mpus[i].at(U("angle")).as_object();
+					double angle[3] = { 0,0,0 };
+
+					angle[0] = angle_vals.at(U("x")).as_double();
+					angle[1] = angle_vals.at(U("y")).as_double();
+					angle[2] = angle_vals.at(U("z")).as_double();
+
+					this->mpus[i]->SetAccelValues(accel);
+					this->mpus[i]->SetGyroValues(gyro);
+					this->mpus[i]->SetAngleValues(angle);
 				}
 
 				/*{
@@ -286,11 +379,8 @@ void cpp_Wrapper::UpdateObjects(string data)
 		}
 		catch (const std::exception& e)
 		{
-
 			cout << "Exception: " << e.what() << endl;
 		}
-
-
 	}
 }
 

@@ -19,6 +19,11 @@ int16_t* Gear_MPU6050::GetAccelerometer(){ return this->accelerometer; }
 int16_t* Gear_MPU6050::GetGyro(){ return this->gyro; }
 int16_t Gear_MPU6050::GetTemperature(){ return this->temperature; }
 
+double* Gear_MPU6050::GetAngle(){ return this->angle; }
+double Gear_MPU6050::GetAngleX(){ return this->angle[0]; }
+double Gear_MPU6050::GetAngleY(){ return this->angle[1]; }
+double Gear_MPU6050::GetAngleZ(){ return this->angle[2]; }
+
 #pragma endregion
 
 #pragma region Private Methods
@@ -183,6 +188,19 @@ void Gear_MPU6050::readRawMPU()
     gyro[1] |= Wire.read();
     gyro[2] = Wire.read() << 8;
     gyro[2] |= Wire.read();                                  
+}
+
+void Gear_MPU6050::CalculateAngles()
+{
+    int minVal=265; int maxVal=402;
+    
+    int xAng = map(accelerometer[0],minVal,maxVal,-90,90); 
+    int yAng = map(accelerometer[1],minVal,maxVal,-90,90); 
+    int zAng = map(accelerometer[2],minVal,maxVal,-90,90);
+    
+    angle[0] = RAD_TO_DEG * (atan2(-yAng, -zAng)+PI); 
+    angle[1] = RAD_TO_DEG * (atan2(-xAng, -zAng)+PI); 
+    angle[2] = RAD_TO_DEG * (atan2(-yAng, -xAng)+PI);
 }
 
 #pragma endregion

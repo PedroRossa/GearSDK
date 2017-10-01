@@ -1,7 +1,7 @@
 #include "../../cpp_Connection.h"
 #include "../../cpp_Wrapper.h"
 
-cpp_Connection cppConnection("192.168.15.2", 81);
+cpp_Connection cppConnection("192.168.15.7", 81);
 cpp_Wrapper wrapper;
 
 int atualNumberOfMessages = 0;
@@ -11,6 +11,18 @@ bool handShakeDone = false;
 bool button_0_state;
 float accelerometer_val[3] = { 0,0,0 };
 float gyro_val[4] = { 0,0,0,0 };
+
+void TryHandShakeWithServer()
+{
+	while (!wrapper.HeaderSetted())
+		wrapper.Init(cppConnection.ReceivedMessage());
+
+	if (!handShakeDone)
+	{
+		cppConnection.SendMessage("@ Hand Shake");
+		handShakeDone = true;
+	}
+}
 
 void main()
 {
@@ -33,79 +45,39 @@ void main()
 		//while connected with the server, try read messages
 		while (cppConnection.IsConnected())
 		{
-			while(!wrapper.HeaderSetted())
-			{
-				wrapper.Init(cppConnection.ReceivedMessage());
-			}
-
-			if (!handShakeDone)
-			{
-				cppConnection.SendMessage("@ Hand Shake");
-				handShakeDone = true;
-			}
+			if(!handShakeDone)
+				TryHandShakeWithServer(); //Loop until handshake done!
 
 			//If the number of connection messages grether then localCounter, it's a new message
 			if (cppConnection.GetNumberOfMessagesReceived() > atualNumberOfMessages)
 			{
 				atualNumberOfMessages = cppConnection.GetNumberOfMessagesReceived();
-
-				//cout << cppConnection.ReceivedMessage() << endl;
 				
 				wrapper.UpdateObjects(cppConnection.ReceivedMessage());
 
-				/*
-				button_0_state = wrapper.GetBool("button_0");
+				double ax = wrapper.GetMPU6050(0)->GetAngle_X();
+				double ay = wrapper.GetMPU6050(0)->GetAngle_Y();
+				double az = wrapper.GetMPU6050(0)->GetAngle_Z();
 
-				float* accel = wrapper.Get_xyz_Float("accelerometer");
+				float intensity = wrapper.GetPotentiometer(0)->GetValue()/1000.0;
 
-				if (accel != NULL)
+ 				if(wrapper.GetButton(0)->GetState())
 				{
-					accelerometer_val[0] = accel[0];
-					accelerometer_val[1] = accel[1];
-					accelerometer_val[2] = accel[2];
-				}
-					cout << "Accelerometer is NULL" << endl;
+					wrapper.GetRGBLed(0)->SetRGB_Value((int)(intensity*1023), (int)(intensity*0), (int)(intensity*1023));
+					wrapper.GetRGBLed(0)->SetMode(LedMode::STATIC);
+					//wrapper.GetRGBLed(0)->SetMode(LedMode::BLINKING, 500, 100);
+					string s = wrapper.GetRGBLed(0)->UpdatedJson();
 
-				float* gyro = wrapper.Get_xyz_Float("gyro");
-
-				if (gyro != NULL)
-				{
-					gyro_val[0] = gyro[0];
-					gyro_val[1] = gyro[1];
-					gyro_val[2] = gyro[2];
-				}
-				else
-					cout << "Gyro is NULL" << endl;
-
-
-				cout << "------ Buttons ------" << endl;
-				cout << " Button_0 : " << button_0_state << endl;
-				cout << "---------------------" << endl << endl;
-
-				cout << "--- Accelerometer ---" << endl;
-				cout << "(" << accelerometer_val[0] << "," << accelerometer_val[1] << "," << accelerometer_val[2] << ")" << endl;
-				cout << "---------------------" << endl;
-
-				cout << "------- Gyro --------" << endl;
-				cout << "(" << gyro_val[0] << "," << gyro_val[1] << "," << gyro_val[2] << ")" << endl;
-				cout << "---------------------" << endl;
-
-				system("cls");
-				*/
-
-				//if (wrapper.GetButton(0).GetState())
-				button_0_state = wrapper.GetButton(0).GetState();
-
-				if(button_0_state)
-				{
-					wrapper.GetRGBLed(0).SetRGB_Value(1023, 0, 1023);
-					string s = wrapper.GetRGBLed(0).UpdatedJsonValue();
-				    //TODO: REFAZER O JSON DE DATA
+					cppConnection.SendMessage(s);
 					
 				}
 				else
 				{
-					wrapper.GetRGBLed(0).SetRGB_Value(0, 1023, 1023);
+					wrapper.GetRGBLed(0)->SetRGB_Value((int)(intensity * 0), (int)(intensity * 1023), (int)(intensity * 1023));
+					wrapper.GetRGBLed(0)->SetMode(LedMode::STATIC);
+
+					string s = wrapper.GetRGBLed(0)->UpdatedJson(); 
+					cppConnection.SendMessage(s);
 				}
 
 			}

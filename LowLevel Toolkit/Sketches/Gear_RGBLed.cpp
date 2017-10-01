@@ -45,8 +45,10 @@ void Gear_RGBLed::SetR_Pin(int r_pin){ this->r_pin = r_pin; }
 void Gear_RGBLed::SetG_Pin(int g_pin){ this->g_pin = g_pin; }
 void Gear_RGBLed::SetB_Pin(int b_pin){ this->b_pin = b_pin; }
 
-void Gear_RGBLed::SetMode(LedMode mode, int timeOn, int timeOff)
+void Gear_RGBLed::SetMode(LedMode mode, int timeOn, int timeOff, bool state)
 { 
+    this->state = state;
+
     this->mode = mode; 
     this->timeOn = timeOn;
     this->timeOff = timeOff;

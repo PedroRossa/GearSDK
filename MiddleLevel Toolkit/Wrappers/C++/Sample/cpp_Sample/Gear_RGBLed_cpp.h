@@ -16,7 +16,9 @@ private:
 	string pin_g;
 	string pin_b;
 
-	LedMode mode;
+	int mode;
+	unsigned int timeOn;
+	unsigned int timeOff;
 
 	int r_value;
 	int g_value;
@@ -29,7 +31,7 @@ public:
 #pragma region Constructors
 
 	Gear_RGBLed_cpp();
-	Gear_RGBLed_cpp(int id, string name, string pin_r, string pin_g, string pin_b, LedMode mode = LedMode::STATIC, int r_value = 1023, int g_value = 1023, int b_value = 1023);
+	Gear_RGBLed_cpp(int id, string name, string pin_r, string pin_g, string pin_b, int mode = LedMode::STATIC, int r_value = 1023, int g_value = 1023, int b_value = 1023, int timeOn = 1000, int timeOff = 500);
 	~Gear_RGBLed_cpp();
 
 #pragma endregion
@@ -42,13 +44,15 @@ public:
 	string Get_G_Pin();
 	string Get_B_Pin();
 
-	LedMode GetMode();
+	int GetMode();
 
 	int Get_R_Value();
 	int Get_G_Value();
 	int Get_B_Value();
 
 	int* GetRGB_Value();
+
+	void SetMode(LedMode mode, int timeOn = 1000, int timeOff = 500);
 
 	void Set_R_Value(int r_value);
 	void Set_G_Value(int g_value);
@@ -61,7 +65,7 @@ public:
 
 #pragma region Public Methods
 
-	string UpdatedJsonValue();
+	string UpdatedJson();
 
 #pragma endregion
 

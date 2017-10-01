@@ -6,7 +6,7 @@ Gear_Button_cpp::Gear_Button_cpp()
 {
 }
 
-Gear_Button_cpp::Gear_Button_cpp(int id, string name, string pin, bool state, ButtonType type)
+Gear_Button_cpp::Gear_Button_cpp(int id, string name, string pin, bool state, int type)
 {
 	this->id = id;
 	this->name = name;
@@ -28,7 +28,7 @@ int Gear_Button_cpp::GetId() { return this->id; }
 string Gear_Button_cpp::GetName() { return this->name; }
 string Gear_Button_cpp::GetPin() { return this->pin; }
 bool Gear_Button_cpp::GetState() { return this->state; }
-ButtonType Gear_Button_cpp::GetType() { return this->type; }
+int Gear_Button_cpp::GetType() { return this->type; }
 
 
 void Gear_Button_cpp::SetState(bool state) { this->state = state; }
