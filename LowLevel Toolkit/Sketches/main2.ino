@@ -103,6 +103,7 @@ void webSocketEvent(uint8_t num, int type, uint8_t* payload, size_t length)
     {
         case WStype_DISCONNECTED:
             Serial.printf("[%u] Disconnected!\n", num);
+            rgbLed.SetColor(1023,0,0);
             break;
         
         case WStype_CONNECTED: {

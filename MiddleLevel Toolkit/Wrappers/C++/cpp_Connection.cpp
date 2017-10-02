@@ -1,5 +1,7 @@
 #include "cpp_Connection.h"
 
+#pragma region Constructors
+
 cpp_Connection::cpp_Connection()
 {
 }	
@@ -14,11 +16,16 @@ cpp_Connection::~cpp_Connection()
 {
 }
 
+#pragma endregion
+
+#pragma region Private Methods
 
 void cpp_Connection::SetReceivedMessage(string message)
 {
 	this->receivedMessage = message;
 }
+
+#pragma endregion
 
 #pragma region Getters and Setters
 
@@ -31,6 +38,8 @@ void cpp_Connection::SetIP(string ip) { this->hardwareIP = ip; }
 void cpp_Connection::SetPort(int port) { this->port = port; }
 
 #pragma endregion
+
+#pragma region Public Methods
 
 web::uri cpp_Connection::ConnectionAddress()
 {
@@ -111,11 +120,6 @@ bool cpp_Connection::SendMessage(string message)
 
 		}).wait();
 
-		//10 miliseconds of delay after send a message
-		clock_t start_time = clock();
-		clock_t end_time = 20 + start_time;
-		while (clock() < end_time);
-
 		return true;
 	}
 	catch (const std::exception&)
@@ -128,3 +132,23 @@ string cpp_Connection::ReceivedMessage()
 {
 	return receivedMessage;
 }
+
+bool cpp_Connection::StablishConnection()
+{
+	//Connect to WebServer
+	while (!this->isConnected)
+	{
+		//Check for succesful connection
+		if (this->Connect())
+			this->SendMessage("Server we are soooo connected!!! <3 ");
+		else
+		{
+			cout << "some problem with connection occours!" << endl << endl;
+			system("pause");
+			return false;
+		}
+	}
+	return true;
+}
+
+#pragma endregion

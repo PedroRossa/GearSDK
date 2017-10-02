@@ -113,6 +113,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\cpp_Connection.cpp" />
     <ClCompile Include="..\..\cpp_Wrapper.cpp" />
+    <ClCompile Include="cpp_Client.cpp" />
     <ClCompile Include="cpp_Sample.cpp" />
     <ClCompile Include="Gear_Button_cpp.cpp" />
     <ClCompile Include="Gear_MPU6050_cpp.cpp" />
@@ -122,6 +123,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\cpp_Connection.h" />
     <ClInclude Include="..\..\cpp_Wrapper.h" />
+    <ClInclude Include="cpp_Client.h" />
     <ClInclude Include="Gear_Button_cpp.h" />
     <ClInclude Include="Gear_MPU6050_cpp.h" />
     <ClInclude Include="Gear_Potentiometer_cpp.h" />
