@@ -1,52 +1,58 @@
-#ifndef cpp_Client_H
-#define cpp_Client_H
+#ifndef Cpp_Client_H
+#define Cpp_Client_H
 
 #include "../../cpp_Connection.h"
 #include "../../cpp_Wrapper.h"
 
-class cpp_Client
+class Cpp_Client
 {
-
 private:
 
-#pragma region Attributes
+#pragma region Private Attributes
 
-	int numberOfMessagesReceived;
-	bool handShakeDone;
+	int atualNumberOfMessages = 0;
+	bool handShakeDone = false;
+	bool canUpdateObjects = false;
 
 #pragma endregion
 
 #pragma region Private Methods
 
-	void TryHandShakeWithServer();
+	void HandShakeWithServer();
 
 #pragma endregion
 
 public:
 
+#pragma region Public Attributes
+
 	cpp_Connection connection;
 	cpp_Wrapper wrapper;
 
+#pragma endregion
+
 #pragma region Constructors
 
-	cpp_Client();
-	cpp_Client(string serverIP, int port);
-	~cpp_Client();
+	Cpp_Client();
+	Cpp_Client(string ip, int port = 81);
+	~Cpp_Client();
 
 #pragma endregion
 
 #pragma region Getters and Setters
 
-	int NumberOfMessagesReceived();
+	int GetAtualNumberOfMessages();
+	bool HandShakeIsDone();
+	bool CanUpdateObjects();
 
-	bool HandShakeDone();
+	void SetAtualNumberOfMessages(int value);
+	void HandShakeIsDone(bool handShakeIsDone);
 
 #pragma endregion
 
 #pragma region Public Methods
 
 	void Init();
-
 	void Update();
 
 #pragma endregion
@@ -54,3 +60,4 @@ public:
 };
 
 #endif
+

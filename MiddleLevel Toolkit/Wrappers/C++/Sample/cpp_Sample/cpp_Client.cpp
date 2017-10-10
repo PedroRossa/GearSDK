@@ -1,30 +1,37 @@
-#include "cpp_Client.h"
+#include "Cpp_Client.h"
 
 #pragma region Constructors
 
-cpp_Client::cpp_Client()
+Cpp_Client::Cpp_Client()
 {
 }
 
-cpp_Client::cpp_Client(string serverIP, int port)
+Cpp_Client::Cpp_Client(string ip, int port)
 {
-	connection = cpp_Connection(serverIP, port);
-	wrapper = cpp_Wrapper();
-
-	this->numberOfMessagesReceived = 0;
-	this->handShakeDone = false;
+	this->connection = cpp_Connection(ip, port);
+	this->wrapper = cpp_Wrapper();
 }
 
-cpp_Client::~cpp_Client()
+Cpp_Client::~Cpp_Client()
 {
 }
 
 #pragma endregion
 
+#pragma region Getters and Setters
+
+int Cpp_Client::GetAtualNumberOfMessages() { return this->atualNumberOfMessages; }
+bool Cpp_Client::HandShakeIsDone() { return this->handShakeDone; }
+bool Cpp_Client::CanUpdateObjects() { return this->canUpdateObjects; }
+
+void Cpp_Client::SetAtualNumberOfMessages(int value) { this->atualNumberOfMessages = value; }
+void Cpp_Client::HandShakeIsDone(bool handShakeIsDone) { this->handShakeDone = handShakeDone; }
+
+#pragma endregion
 
 #pragma region Private Methods
 
-void cpp_Client::TryHandShakeWithServer()
+void Cpp_Client::HandShakeWithServer()
 {
 	while (!wrapper.HeaderSetted())
 		wrapper.Init(connection.ReceivedMessage());
@@ -38,31 +45,34 @@ void cpp_Client::TryHandShakeWithServer()
 
 #pragma endregion
 
-#pragma region Getters and Setters
-
-int cpp_Client::NumberOfMessagesReceived() { return this->numberOfMessagesReceived; }
-bool cpp_Client::HandShakeDone() { return this->handShakeDone; }
-
-#pragma endregion
-
 #pragma region Public Methods
 
-void cpp_Client::Init()
+void Cpp_Client::Init()
 {
 	try
 	{
-		//Garantee the connection with the webServer
-		if (!connection.StablishConnection())
-			return;
+		//Connect to WebServer
+		if (!connection.IsConnected())
+		{
+			//Check for succesful connection
+			if (connection.Connect())
+				connection.SendMessage("Server we are soooo connected!!! <3 ");
+			else
+			{
+				cout << "some problem with connection occours!" << endl << endl;
+				system("pause");
+				return;
+			}
+		}
 	}
 	catch (const std::exception& e)
 	{
 		cout << e.what() << endl;
-		system("pause");
 	}
+
 }
 
-void cpp_Client::Update()
+void Cpp_Client::Update()
 {
 	try
 	{
@@ -70,27 +80,31 @@ void cpp_Client::Update()
 		if (connection.IsConnected())
 		{
 			if (!handShakeDone)
-				TryHandShakeWithServer(); //Loop until handshake done!
-			else
+				HandShakeWithServer(); //Loop until handshake done!
+
+			//If the number of connection messages grether then localCounter, it's a new message
+			if (connection.GetNumberOfMessagesReceived() > atualNumberOfMessages)
 			{
-				//If the number of connection messages grether then localCounter, it's a new message
-				//if (connection.GetNumberOfMessagesReceived() > numberOfMessagesReceived)
-				//{
- 					numberOfMessagesReceived = connection.GetNumberOfMessagesReceived();
-					wrapper.UpdateObjects(connection.ReceivedMessage());
-				//}
+				atualNumberOfMessages = connection.GetNumberOfMessagesReceived();
+
+				wrapper.UpdateObjects(connection.ReceivedMessage());
+				canUpdateObjects = true;
 			}
-		}
-		else
-		{
-			cout << "Lost connection!" << endl;
-			system("pause");
+			else
+				canUpdateObjects = false;
+
+			//forced disconnetion
+			//if (atualNumberOfMessages > 40)
+			//{
+			//	cout << "Disconnecting..." << endl << endl;
+			//	cppConnection.Disconnect();
+			//	break;
+			//}
 		}
 	}
 	catch (const std::exception& e)
 	{
 		cout << e.what() << endl;
-		system("pause");
 	}
 }
 

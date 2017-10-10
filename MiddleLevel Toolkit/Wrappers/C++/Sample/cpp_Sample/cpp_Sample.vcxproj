@@ -114,7 +114,6 @@
     <ClCompile Include="..\..\cpp_Connection.cpp" />
     <ClCompile Include="..\..\cpp_Wrapper.cpp" />
     <ClCompile Include="cpp_Client.cpp" />
-    <ClCompile Include="cpp_Sample.cpp" />
     <ClCompile Include="Gear_Button_cpp.cpp" />
     <ClCompile Include="Gear_MPU6050_cpp.cpp" />
     <ClCompile Include="Gear_Potentiometer_cpp.cpp" />
