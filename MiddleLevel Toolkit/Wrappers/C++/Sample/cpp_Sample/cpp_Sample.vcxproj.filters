@@ -13,11 +13,11 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Header Files\Objects">
-      <UniqueIdentifier>{b3b6722d-1850-439f-b496-964276815125}</UniqueIdentifier>
+    <Filter Include="Header Files\Gear_Objects">
+      <UniqueIdentifier>{c87e034f-5759-4ce4-82f2-1f2d92e6097b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Objects">
-      <UniqueIdentifier>{7c1fbe7e-db24-444f-937f-50c4787e8b19}</UniqueIdentifier>
+    <Filter Include="Source Files\Gear_Objects">
+      <UniqueIdentifier>{2030d9e5-c40a-4b99-8494-d23361bdfaa3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -30,20 +30,23 @@
     <ClCompile Include="..\..\cpp_Wrapper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="cpp_Client.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Gear_Button_cpp.cpp">
-      <Filter>Source Files\Objects</Filter>
+      <Filter>Source Files\Gear_Objects</Filter>
     </ClCompile>
     <ClCompile Include="Gear_MPU6050_cpp.cpp">
-      <Filter>Source Files\Objects</Filter>
+      <Filter>Source Files\Gear_Objects</Filter>
     </ClCompile>
     <ClCompile Include="Gear_Potentiometer_cpp.cpp">
-      <Filter>Source Files\Objects</Filter>
+      <Filter>Source Files\Gear_Objects</Filter>
     </ClCompile>
     <ClCompile Include="Gear_RGBLed_cpp.cpp">
-      <Filter>Source Files\Objects</Filter>
+      <Filter>Source Files\Gear_Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Cpp_Client.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp_Demo.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -56,20 +59,20 @@
     <ClInclude Include="Helper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="cpp_Client.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Gear_Button_cpp.h">
-      <Filter>Header Files\Objects</Filter>
+      <Filter>Header Files\Gear_Objects</Filter>
     </ClInclude>
     <ClInclude Include="Gear_MPU6050_cpp.h">
-      <Filter>Header Files\Objects</Filter>
+      <Filter>Header Files\Gear_Objects</Filter>
     </ClInclude>
     <ClInclude Include="Gear_Potentiometer_cpp.h">
-      <Filter>Header Files\Objects</Filter>
+      <Filter>Header Files\Gear_Objects</Filter>
     </ClInclude>
     <ClInclude Include="Gear_RGBLed_cpp.h">
-      <Filter>Header Files\Objects</Filter>
+      <Filter>Header Files\Gear_Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Cpp_Client.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

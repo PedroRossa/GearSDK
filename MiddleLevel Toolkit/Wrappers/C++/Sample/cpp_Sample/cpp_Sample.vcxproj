@@ -119,6 +119,7 @@
     <ClCompile Include="Gear_MPU6050_cpp.cpp" />
     <ClCompile Include="Gear_Potentiometer_cpp.cpp" />
     <ClCompile Include="Gear_RGBLed_cpp.cpp" />
+    <ClCompile Include="cpp_Demo.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\cpp_Connection.h" />

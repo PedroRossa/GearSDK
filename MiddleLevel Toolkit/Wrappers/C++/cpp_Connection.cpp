@@ -119,7 +119,6 @@ bool cpp_Connection::SendMessage(string message)
 			//Message sent succefuly!
 
 		}).wait();
-
 		return true;
 	}
 	catch (const std::exception&)

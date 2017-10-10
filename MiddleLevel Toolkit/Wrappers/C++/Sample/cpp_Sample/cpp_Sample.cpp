@@ -36,7 +36,7 @@ void TestObjects()
 	}
 }
 
-void main()
+void mainw()
 {
 	client = cpp_Client("192.168.15.12", 81);
 
