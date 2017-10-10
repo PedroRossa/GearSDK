@@ -8,8 +8,11 @@ cpp_Client::cpp_Client()
 
 cpp_Client::cpp_Client(string serverIP, int port)
 {
-	connection = new cpp_Connection(serverIP, port);
-	wrapper = new cpp_Wrapper();
+	connection = cpp_Connection(serverIP, port);
+	wrapper = cpp_Wrapper();
+
+	this->numberOfMessagesReceived = 0;
+	this->handShakeDone = false;
 }
 
 cpp_Client::~cpp_Client()
@@ -23,12 +26,12 @@ cpp_Client::~cpp_Client()
 
 void cpp_Client::TryHandShakeWithServer()
 {
-	while (!wrapper->HeaderSetted())
-		wrapper->Init(connection->ReceivedMessage());
+	while (!wrapper.HeaderSetted())
+		wrapper.Init(connection.ReceivedMessage());
 
 	if (!handShakeDone)
 	{
-		connection->SendMessage("@ Hand Shake");
+		connection.SendMessage("@ Hand Shake");
 		handShakeDone = true;
 	}
 }
@@ -49,7 +52,7 @@ void cpp_Client::Init()
 	try
 	{
 		//Garantee the connection with the webServer
-		if (!connection->StablishConnection())
+		if (!connection.StablishConnection())
 			return;
 	}
 	catch (const std::exception& e)
@@ -64,19 +67,24 @@ void cpp_Client::Update()
 	try
 	{
 		//while connected with the server, try read messages
-		if (connection->IsConnected())
+		if (connection.IsConnected())
 		{
 			if (!handShakeDone)
 				TryHandShakeWithServer(); //Loop until handshake done!
 			else
 			{
 				//If the number of connection messages grether then localCounter, it's a new message
-				if (connection->GetNumberOfMessagesReceived() > numberOfMessagesReceived)
-				{
- 					numberOfMessagesReceived = connection->GetNumberOfMessagesReceived();
-					wrapper->UpdateObjects(connection->ReceivedMessage());
-				}
+				//if (connection.GetNumberOfMessagesReceived() > numberOfMessagesReceived)
+				//{
+ 					numberOfMessagesReceived = connection.GetNumberOfMessagesReceived();
+					wrapper.UpdateObjects(connection.ReceivedMessage());
+				//}
 			}
+		}
+		else
+		{
+			cout << "Lost connection!" << endl;
+			system("pause");
 		}
 	}
 	catch (const std::exception& e)
@@ -84,11 +92,6 @@ void cpp_Client::Update()
 		cout << e.what() << endl;
 		system("pause");
 	}
-
-	//10 miliseconds of delay after send a message
-	clock_t start_time = clock();
-	clock_t end_time = 20 + start_time;
-	while (clock() < end_time);
 }
 
 #pragma endregion

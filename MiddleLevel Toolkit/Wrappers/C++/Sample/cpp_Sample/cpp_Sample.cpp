@@ -1,46 +1,50 @@
 #include "cpp_Client.h"
 
-cpp_Client* client;
+cpp_Client client;
 
 void TestObjects()
 {
-	double ax = client->wrapper->GetMPU6050(0)->GetAngle_X();
-	double ay = client->wrapper->GetMPU6050(0)->GetAngle_Y();
-	double az = client->wrapper->GetMPU6050(0)->GetAngle_Z();
+	float intensity = client.wrapper.GetPotentiometer(0)->GetValue() / 1000.0;
 
-	float intensity = client->wrapper->GetPotentiometer(0)->GetValue() / 1000.0;
+	//double ax = client->wrapper->GetMPU6050(0)->GetAngle_X();
+	//double ay = client->wrapper->GetMPU6050(0)->GetAngle_Y();
+	//double az = client->wrapper->GetMPU6050(0)->GetAngle_Z();
+	//cout << ax << " " << ay << " " << az << " " << intensity << endl;
 
-	cout << ax << " " << ay << " " << az << " " << intensity << endl;
+	Gear_RGBLed_cpp* aux = client.wrapper.GetRGBLed(0);
 
-	if (client->wrapper->GetButton(0)->GetState())
+	if (client.wrapper.GetButton(0)->GetState())
 	{
-		client->wrapper->GetRGBLed(0)->SetRGB_Value((int)(intensity * 1023), (int)(intensity * 0), (int)(intensity * 1023));
-		client->wrapper->GetRGBLed(0)->SetMode(LedMode::STATIC);
-		//wrapper.GetRGBLed(0)->SetMode(LedMode::BLINKING, 500, 100);
-		string s = client->wrapper->GetRGBLed(0)->UpdatedJson();
-	
-		client->connection->SendMessage(s);
-	
+		aux->SetRGB_Value((int)(intensity * 1023), (int)(intensity * 0), (int)(intensity * 1023));
+		aux->SetMode(LedMode::STATIC);
+		//aux->SetMode(LedMode::BLINKING, 500, 100);
+
+		string s = aux->UpdatedJson();
+		client.wrapper.SetRGBLed(0, aux);
+
+		client.connection.SendMessage(s);
 	}
 	else
 	{
-		client->wrapper->GetRGBLed(0)->SetRGB_Value((int)(intensity * 0), (int)(intensity * 1023), (int)(intensity * 1023));
-		client->wrapper->GetRGBLed(0)->SetMode(LedMode::STATIC);
+		aux->SetRGB_Value((int)(intensity * 0), (int)(intensity * 1023), (int)(intensity * 1023));
+		aux->SetMode(LedMode::STATIC);
 	
-		string s = client->wrapper->GetRGBLed(0)->UpdatedJson();
-		client->connection->SendMessage(s);
+		string s = aux->UpdatedJson();
+		client.wrapper.SetRGBLed(0, aux);
+
+		client.connection.SendMessage(s);
 	}
 }
 
 void main()
 {
-	client = new cpp_Client("192.168.15.8", 81);
+	client = cpp_Client("192.168.15.12", 81);
 
-	client->Init();
+	client.Init();
 
-	while (client->connection->IsConnected())
+	while (client.connection.IsConnected())
 	{
-		client->Update();
+		client.Update();
 	
 		TestObjects();
 	}

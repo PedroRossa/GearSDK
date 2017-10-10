@@ -24,10 +24,10 @@ class cpp_Wrapper
 
 	bool headerSetted = false;
 
-	vector<Gear_Button_cpp*> buttons;
-	vector<Gear_Potentiometer_cpp*> potentiometers;
-	vector<Gear_RGBLed_cpp*> rgbLeds;
-	vector<Gear_MPU6050_cpp*> mpus;
+	vector<Gear_Button_cpp*>* buttons;
+	vector<Gear_Potentiometer_cpp*>* potentiometers;
+	vector<Gear_RGBLed_cpp*>* rgbLeds;
+	vector<Gear_MPU6050_cpp*>* mpus;
 
 #pragma endregion
 
@@ -60,6 +60,8 @@ public:
 	Gear_Potentiometer_cpp* GetPotentiometer(int id);
 	Gear_RGBLed_cpp* GetRGBLed(int id);
 	Gear_MPU6050_cpp* GetMPU6050(int id);
+
+	void SetRGBLed(int id, Gear_RGBLed_cpp* newObj);
 
 #pragma endregion
 

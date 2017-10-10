@@ -24,8 +24,8 @@ private:
 
 public:
 
-	cpp_Connection* connection;
-	cpp_Wrapper* wrapper;
+	cpp_Connection connection;
+	cpp_Wrapper wrapper;
 
 #pragma region Constructors
 
