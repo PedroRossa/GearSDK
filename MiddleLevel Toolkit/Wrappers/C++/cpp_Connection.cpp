@@ -110,12 +110,6 @@ bool cpp_Connection::SendMessage(string message)
 			//Message sent succefuly!
 
 		}).wait();
-
-		//10 miliseconds of delay after send a message
-		clock_t start_time = clock();
-		clock_t end_time = 20 + start_time;
-		while (clock() < end_time);
-
 		return true;
 	}
 	catch (const std::exception&)

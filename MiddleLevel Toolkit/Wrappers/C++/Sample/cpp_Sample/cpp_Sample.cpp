@@ -1,7 +1,7 @@
 #include "../../cpp_Connection.h"
 #include "../../cpp_Wrapper.h"
 
-cpp_Connection cppConnection("192.168.15.7", 81);
+cpp_Connection cppConnection("192.168.15.12", 81);
 cpp_Wrapper wrapper;
 
 int atualNumberOfMessages = 0;
@@ -24,7 +24,7 @@ void TryHandShakeWithServer()
 	}
 }
 
-void main()
+void mainw()
 {
 	try
 	{
