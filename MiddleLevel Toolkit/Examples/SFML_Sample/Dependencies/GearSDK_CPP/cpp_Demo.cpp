@@ -32,7 +32,7 @@ void UpdateObjects()
 	}
 }
 
-int main()
+int old_main()
 {
 	client = Cpp_Client("192.168.15.7", 81);
 
