@@ -115,7 +115,7 @@ void SFML_Loop()
 
 int main()
 {
-	client = Cpp_Client("192.168.15.7", 81);
+	client = Cpp_Client("192.168.43.36", 81);
 	client.Init();
 
 	screen = Screen();
