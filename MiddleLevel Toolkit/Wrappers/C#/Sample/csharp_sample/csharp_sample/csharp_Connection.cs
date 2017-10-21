@@ -60,7 +60,8 @@ namespace csharp_sample
                 webSocketClient.OnMessage += (sender, e) =>
                 {
                     this.receivedMessage = e.Data;
-                    Console.WriteLine("Server says: " + e.Data);
+                    this.messageCounter++;
+                    //Console.WriteLine("Server says: " + e.Data);
                 };
                 //On connection is closed
                 webSocketClient.OnClose += (sender, e) =>

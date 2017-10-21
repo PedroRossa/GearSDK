@@ -19,7 +19,7 @@ namespace csharp_sample
         #region Public Attributes
 
         public csharp_Connection connection;
-        //public csharp_Wrapper wrapper;
+        public csharp_Wrapper wrapper;
 
         #endregion
 
@@ -27,14 +27,14 @@ namespace csharp_sample
 
         void HandShakeWithServer()
         {
-            //while (!wrapper.HeaderSetted())
-            //    wrapper.Init(connection.ReceivedMessage());
-            //
-            //if (!handShakeDone)
-            //{
-            //    connection.SendMessage("@ Hand Shake");
-            //    handShakeDone = true;
-            //}
+            while (!wrapper.HeaderSetted)
+                wrapper.Init(connection.ReceivedMessage());
+            
+            if (!handShakeDone)
+            {
+                connection.SendMessage("@ Hand Shake");
+                handShakeDone = true;
+            }
         }
 
         #endregion
@@ -49,7 +49,7 @@ namespace csharp_sample
         public csharp_Client(string ip, int port = 81)
         {
             this.connection = new csharp_Connection(ip, port);
-            //this->wrapper = cpp_Wrapper();
+            this.wrapper = new csharp_Wrapper();
         }
 
         #endregion
@@ -84,7 +84,7 @@ namespace csharp_sample
                     {
                         atualNumberOfMessages = connection.MessageCounter;
 
-                        //wrapper.UpdateObjects(connection.ReceivedMessage());
+                        wrapper.UpdateObjects(connection.ReceivedMessage());
                         canUpdateObjects = true;
                     }
                     else
