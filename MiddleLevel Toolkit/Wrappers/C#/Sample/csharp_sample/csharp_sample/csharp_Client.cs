@@ -66,16 +66,7 @@ namespace csharp_sample
 
         public void Init()
         {
-            while (!connection.IsConnected)
-            {
-                if (connection.Connect())
-                    connection.SendMessage("Server we are sooo connected!!! <3");
-                else
-                {
-                    Console.WriteLine("Some problem with the connection occurs!");
-                    Console.ReadKey(true);
-                }
-            }
+            connection.StablishConnection();
         }
 
         public void Update()

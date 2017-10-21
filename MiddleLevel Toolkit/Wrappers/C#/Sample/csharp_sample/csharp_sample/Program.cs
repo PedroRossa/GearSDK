@@ -11,7 +11,7 @@ namespace csharp_sample
 
         static void Main(string[] args)
         {
-            csharp_Client client = new csharp_Client("192.168.15.8", 81);
+            csharp_Client client = new csharp_Client("192.168.15.9", 81);
 
             client.Init();
 

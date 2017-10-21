@@ -11,13 +11,12 @@ namespace csharp_sample
 
         private string hardwareIP;
         private int port;
-
-        private string message;
+        
         private string receivedMessage;
         
         private int messageCounter = 0;
         private bool isConnected = false;
-
+        
         #endregion
 
         #region Constructors
@@ -50,27 +49,36 @@ namespace csharp_sample
         {
             try
             {
-                using (webSocketClient = new WebSocket("ws://" + this.hardwareIP + ":" + this.port))
-                {
-                    webSocketClient.OnMessage += (sender, e) =>
-                    {
-                        this.receivedMessage = e.Data;
-                        Console.WriteLine("Server says: " + e.Data);
-                    };
+                webSocketClient = new WebSocket("ws://" + this.hardwareIP + ":" + this.port);
 
-                    webSocketClient.Connect();
-                    
+                // On connection is opened
+                webSocketClient.OnOpen += (sender, e) =>
+                {
                     webSocketClient.Send(initialMessage);
-                }
+                };
+                //On client receive a message
+                webSocketClient.OnMessage += (sender, e) =>
+                {
+                    this.receivedMessage = e.Data;
+                    Console.WriteLine("Server says: " + e.Data);
+                };
+                //On connection is closed
+                webSocketClient.OnClose += (sender, e) =>
+                {
+                    Disconnect();
+                };
+
+                webSocketClient.Connect();
+
             }
             catch (Exception e)
             {
-                Console.WriteLine("Error on send message:" + e.Message);
+                Console.WriteLine("Error on send message: " + e.Message);
+                this.isConnected = false;
                 return false;
             }
             this.isConnected = true;
             return true;
-           
         }
 
         public void Disconnect(string byebyeMessage = "Bye bye my Hardware Friend")
