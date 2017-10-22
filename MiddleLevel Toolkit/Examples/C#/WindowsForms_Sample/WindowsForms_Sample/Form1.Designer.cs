@@ -1,4 +1,6 @@
-﻿namespace WindowsForms_Sample
+﻿using GearSDK_CSharpDLL;
+
+namespace WindowsForms_Sample
 {
     partial class Form1
     {
@@ -606,7 +608,7 @@
 
         public void UpdateForm()
         {
-            client = new csharp_Client("192.168.15.9", 81);
+            client = GearSDK.CreateClient("192.168.15.9", 81);
 
             client.Init();
 

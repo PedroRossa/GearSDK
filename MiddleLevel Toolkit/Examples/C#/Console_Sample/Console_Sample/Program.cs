@@ -4,13 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using GearSDK_CSharpDLL;
+
 namespace Console_Sample
 {
     class Program
     {
         static void Main(string[] args)
         {
-           csharp_Client client = new csharp_Client("192.168.15.9", 81);
+           csharp_Client client = GearSDK.CreateClient("192.168.15.9", 81);
 
             client.Init();
 
