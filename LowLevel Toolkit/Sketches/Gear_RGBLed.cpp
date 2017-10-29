@@ -30,7 +30,7 @@
         const size_t bufSize = JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(3) + 40;
         jsonBuffer = new DynamicJsonBuffer(bufSize);
              
-        const char* dataJson = "{\"mode\":2,\"value\":{\"r\":0,\"g\":1023,\"b\":0}}";
+        const char* dataJson = "{\"rgb_led\":{\"name\":\" name Here \",\"mode\":2,\"value\":{\"r\":0,\"g\":1023,\"b\":0}}}";
         this->json =  &jsonBuffer->parseObject(dataJson);
     }
 
@@ -170,6 +170,8 @@ void Gear_RGBLed::init()
     pinMode(this->r_pin, OUTPUT);
     pinMode(this->g_pin, OUTPUT);
     pinMode(this->b_pin, OUTPUT);
+
+    (*this->json)["rgb_led"]["name"] = GetName();
 }
 
 void Gear_RGBLed::update()
@@ -202,16 +204,14 @@ void Gear_RGBLed::update()
 }
 
 String Gear_RGBLed::updatedData()
-{
-    //{\"mode\":2,\"value\":{\"r\":0,\"g\":1023,\"b\":0}}
-
+{    
     int lastMode = (*this->json)["mode"];
     int atualMode = GetMode();
     Gear_Color color = GetColor();
 
-    int lastR = (*this->json)["value"]["r"];
-    int lastG = (*this->json)["value"]["g"];
-    int lastB = (*this->json)["value"]["b"];
+    int lastR = (*this->json)["rgb_led"]["value"]["r"];
+    int lastG = (*this->json)["rgb_led"]["value"]["g"];
+    int lastB = (*this->json)["rgb_led"]["value"]["b"];
 
     int atualR = color.GetR();
     int atualG = color.GetG();
@@ -219,10 +219,10 @@ String Gear_RGBLed::updatedData()
 
     if(lastMode != atualMode || lastR != atualR || lastG != atualG || lastB != atualB)
     {
-        (*this->json)["mode"] = atualMode;
-        (*this->json)["value"]["r"] = atualR;
-        (*this->json)["value"]["g"] = atualG;
-        (*this->json)["value"]["b"] = atualB;
+        (*this->json)["rgb_led"]["mode"] = atualMode;
+        (*this->json)["rgb_led"]["value"]["r"] = atualR;
+        (*this->json)["rgb_led"]["value"]["g"] = atualG;
+        (*this->json)["rgb_led"]["value"]["b"] = atualB;
 
         String aux = "";
         this->json->printTo(aux);

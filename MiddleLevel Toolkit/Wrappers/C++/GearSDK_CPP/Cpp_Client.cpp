@@ -81,25 +81,8 @@ void Cpp_Client::Update()
 		{
 			if (!handShakeDone)
 				HandShakeWithServer(); //Loop until handshake done!
-
-			//If the number of connection messages grether then localCounter, it's a new message
-			if (connection.GetNumberOfMessagesReceived() > atualNumberOfMessages)
-			{
-				atualNumberOfMessages = connection.GetNumberOfMessagesReceived();
-
-				wrapper.UpdateObjects(connection.ReceivedMessage());
-				canUpdateObjects = true;
-			}
-			else
-				canUpdateObjects = false;
-
-			//forced disconnetion
-			//if (atualNumberOfMessages > 40)
-			//{
-			//	cout << "Disconnecting..." << endl << endl;
-			//	cppConnection.Disconnect();
-			//	break;
-			//}
+						
+			wrapper.UpdateObjects(connection.ReceivedMessage());
 		}
 	}
 	catch (const std::exception& e)

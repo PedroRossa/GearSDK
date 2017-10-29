@@ -2,10 +2,7 @@
 
 #pragma region Constructors
 
-    Gear_Potentiometer::Gear_Potentiometer()
-    {
-
-    }
+    Gear_Potentiometer::Gear_Potentiometer(){}
 
     Gear_Potentiometer::Gear_Potentiometer(String name, int pin)
     {
@@ -17,14 +14,11 @@
         const size_t bufSize = JSON_OBJECT_SIZE(1) + 10;
         jsonBuffer = new DynamicJsonBuffer(bufSize);
              
-        const char* dataJson = "{\"value\":0}";
+        const char* dataJson = "{\"potentiometer\":{\"name\":\" name Here \", \"value\":0}}";
         this->json =  &jsonBuffer->parseObject(dataJson);
     }
 
-    Gear_Potentiometer::~Gear_Potentiometer()
-    {
-
-    }
+    Gear_Potentiometer::~Gear_Potentiometer(){}
 
 #pragma endregion
 
@@ -62,16 +56,18 @@ String Gear_Potentiometer::headerJson()
     void Gear_Potentiometer::init()
     {
         pinMode(this->pin, INPUT);
+
+        (*this->json)["potentiometer"]["name"] = GetName();
     }
 
     String Gear_Potentiometer::updatedData()
     {
-        int lastValue = (*this->json)["value"];
+        int lastValue = (*this->json)["potentiometer"]["value"];
         int atualValue = GetValue();
 
         if(lastValue != atualValue)
         {
-            (*this->json)["value"] = atualValue;
+            (*this->json)["potentiometer"]["value"] = atualValue;
 
             String aux = "";
             this->json->printTo(aux);

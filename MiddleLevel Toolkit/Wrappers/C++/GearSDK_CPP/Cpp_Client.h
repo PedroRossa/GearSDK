@@ -1,8 +1,8 @@
 #ifndef Cpp_Client_H
 #define Cpp_Client_H
 
-#include "../../cpp_Connection.h"
-#include "../../cpp_Wrapper.h"
+#include "cpp_Connection.h"
+#include "cpp_Wrapper.h"
 
 class Cpp_Client
 {

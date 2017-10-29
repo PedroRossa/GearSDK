@@ -4,10 +4,10 @@
 #include <cpprest/json.h>
 #include <iostream>
 
-#include "Sample\cpp_Sample\Gear_Button_cpp.h"
-#include "Sample\cpp_Sample\Gear_Potentiometer_cpp.h"
-#include "Sample\cpp_Sample\Gear_RGBLed_cpp.h"
-#include "Sample\cpp_Sample\Gear_MPU6050_cpp.h"
+#include "Gear_Objects\Gear_Button_cpp.h"
+#include "Gear_Objects\Gear_Potentiometer_cpp.h"
+#include "Gear_Objects\Gear_RGBLed_cpp.h"
+#include "Gear_Objects\Gear_MPU6050_cpp.h"
 
 using namespace std;
 using namespace web;
@@ -37,6 +37,11 @@ class cpp_Wrapper
 	Gear_Potentiometer_cpp* CreatePotentiometer(json::value values);
 	Gear_RGBLed_cpp* CreateRGBLed(json::value values);
 	Gear_MPU6050_cpp* CreateMPU6050(json::value values);
+
+	void UpdateButton();
+	void UpdatePotentiometer();
+	void UpdateRGBLed();
+	void UpdateMpu();
 
 #pragma endregion
 	

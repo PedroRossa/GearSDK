@@ -13,10 +13,10 @@ Gear_Button::Gear_Button(String name, int pin, ButtonType type)
 
     this->header = headerJson();
 
-    const size_t bufSize = JSON_OBJECT_SIZE(1) + 10;
+    const size_t bufSize = JSON_OBJECT_SIZE(1) + JSON_OBJECT_SIZE(2) + 60;
     jsonBuffer = new DynamicJsonBuffer(bufSize);
-     
-    const char* dataJson = "{\"state\":0}";
+    
+    const char* dataJson = "{\"button\":{\"name\":\" name Here \", \"state\":0}}";
     this->json =  &jsonBuffer->parseObject(dataJson);
 }
 
@@ -61,16 +61,18 @@ String Gear_Button::GetHeader(){ return this->header; }
 void Gear_Button::init()
 {
     pinMode(this->pin, INPUT);
+    
+    (*this->json)["button"]["name"] = GetName();
 }
 
 String Gear_Button::updatedData()
 {
-    int lastState = (*this->json)["state"];
+    int lastState = (*this->json)["button"]["state"];
     int atualState = GetState();
 
     if(lastState != atualState)
     {
-        (*this->json)["state"] = atualState;
+        (*this->json)["button"]["state"] = atualState;
 
         String aux = "";
         this->json->printTo(aux);

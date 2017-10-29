@@ -1,7 +1,7 @@
 #ifndef Gear_Button_cpp_H
 #define Gear_Button_cpp_H
 
-#include "Helper.h"
+#include "..\Helper.h"
 
 class Gear_Button_cpp
 {

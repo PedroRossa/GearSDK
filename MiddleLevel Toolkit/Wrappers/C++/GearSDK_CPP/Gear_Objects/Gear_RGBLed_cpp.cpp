@@ -88,16 +88,6 @@ void Gear_RGBLed_cpp::SetRGB_Value(int r, int g, int b)
 
 string Gear_RGBLed_cpp::UpdatedJson()
 {
-	/*{
-        "name": "rgb_led_0",
-        "pin": "D3,D4,D5",
-        "mode": "BLINKING",
-        "value": {
-          "r": 0,
-          "g": 1023,
-          "b": 0
-        }
-      }*/
 	string val = "{\"name\":\"" + this->name + "\",";
 	val += "\"pin\":\"" + this->pin_r + "," + this->pin_g + "," + this->pin_b + "\",";
 	val += "\"mode\":" + to_string(this->mode) + ",";

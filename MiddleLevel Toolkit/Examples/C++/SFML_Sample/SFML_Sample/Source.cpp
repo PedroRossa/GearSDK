@@ -33,19 +33,19 @@ void Update_GearObjects()
 	
 	if (btnState)
 	{
-		client.wrapper.GetRGBLed(0)->SetRGB_Value((int)(pot * 1023), (int)(pot * 0), (int)(pot * 1023));
-		client.wrapper.GetRGBLed(0)->SetMode(LedMode::STATIC);
-		//wrapper.GetRGBLed(0)->SetMode(LedMode::BLINKING, 500, 100);
-		string s = client.wrapper.GetRGBLed(0)->UpdatedJson();
-		client.connection.SendMessage(s);
+		//client.wrapper.GetRGBLed(0)->SetRGB_Value((int)(pot * 1023), (int)(pot * 0), (int)(pot * 1023));
+		//client.wrapper.GetRGBLed(0)->SetMode(LedMode::STATIC);
+		////wrapper.GetRGBLed(0)->SetMode(LedMode::BLINKING, 500, 100);
+		//string s = client.wrapper.GetRGBLed(0)->UpdatedJson();
+		//client.connection.SendMessage(s);
 	}
 	else
 	{
-		client.wrapper.GetRGBLed(0)->SetRGB_Value((int)(pot * 0), (int)(pot * 1023), (int)(pot * 1023));
-		client.wrapper.GetRGBLed(0)->SetMode(LedMode::STATIC);
-
-		string s = client.wrapper.GetRGBLed(0)->UpdatedJson();
-		client.connection.SendMessage(s);
+		//client.wrapper.GetRGBLed(0)->SetRGB_Value((int)(pot * 0), (int)(pot * 1023), (int)(pot * 1023));
+		//client.wrapper.GetRGBLed(0)->SetMode(LedMode::STATIC);
+		//
+		//string s = client.wrapper.GetRGBLed(0)->UpdatedJson();
+		//client.connection.SendMessage(s);
 	}
 }
 
@@ -86,13 +86,8 @@ void GearSDL_Loop()
 	if (client.connection.IsConnected())
 	{
 		client.Update();
-
-		if (client.CanUpdateObjects())
-		{
-			Update_GearObjects();
-
-			Update_SFLMObjects();
-		}
+		Update_GearObjects();
+		Update_SFLMObjects();
 	}
 }
 
@@ -115,7 +110,7 @@ void SFML_Loop()
 
 int main()
 {
-	client = Cpp_Client("192.168.15.9", 81);
+	client = Cpp_Client("192.168.43.36", 81);
 	client.Init();
 
 	screen = Screen();

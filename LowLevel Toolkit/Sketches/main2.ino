@@ -34,79 +34,19 @@ String MountJSONHeader()
     return jsonHeader;
 }
 
-void SetJSON()
-{
-    for(uint8_t i = 0 ; i < j_buttons.size(); i++)
-    {
-        //TODO: Pegar todos os botoes aqui!!!!
-        j_buttons[i]["state"] = button_0.GetState();
-    }
-
-    for(uint8_t i = 0; i < j_potentiometers.size(); i++)
-    {
-        j_potentiometers[i]["value"] = pot.GetValue();
-    }
-
-    for(uint8_t i = 0; i < j_mpus.size(); i++)
-    {    
-        int16_t* acell = g_mpu.GetAccelerometer();
-
-        j_mpus[i]["accel"]["x"] = acell[0];
-        j_mpus[i]["accel"]["y"] = acell[1];
-        j_mpus[i]["accel"]["z"] = acell[2];
-
-        int16_t* gyro = g_mpu.GetGyro();
-
-        j_mpus[i]["gyro"]["x"] = gyro[0];
-        j_mpus[i]["gyro"]["y"] = gyro[1];
-        j_mpus[i]["gyro"]["z"] = gyro[2];
-
-        double* angle = g_mpu.GetAngle();
-
-        j_mpus[i]["angle"]["x"] = angle[0];
-        j_mpus[i]["angle"]["y"] = angle[1];
-        j_mpus[i]["angle"]["z"] = angle[2];
-    }
-    
-    parserJSON = "";
-    jsonRoot.printTo(parserJSON);
-}
-
 void SendObjects()
 {
     String s = button_0.updatedData();
-    
-    if(s != "")
-    {
-        Serial.print("Button: ");
-        Serial.println(s);
-        //webSocket.sendTXT(0, s);
-    }
+    if(s != "") { webSocket.sendTXT(0, s); }
 
     s = pot.updatedData();
-
-    if(s != "")
-    {
-        //Serial.print("Potentiometer: ");
-        //Serial.println(s);
-        //webSocket.sendTXT(0, s);
-    }
+    if(s != "") { webSocket.sendTXT(0, s); }
 
     s = rgbLed.updatedData();
-    
-    if(s != "")
-    {
-        Serial.println("RGBLed: ");
-        Serial.println(s);
-    }
+    if(s != "") { webSocket.sendTXT(0, s); }
 
     s = g_mpu.updatedData();
-        
-    if(s != "")
-    {
-       // Serial.println("MPU: ");
-        //Serial.println(s);
-    }
+    if(s != "") { webSocket.sendTXT(0, s); }
 }
 
 void setup() 
@@ -139,15 +79,11 @@ void loop()
         webSocket.sendTXT(0, jsonHeader);
     }
     else
-    {
-        SetJSON();
-        webSocket.sendTXT(0, parserJSON);
+    { 
+        SendObjects();
     }
 
     WebServerLoop();
-    SendObjects();
-    //24 fps
-    delay(40);
 }
 
 void webSocketEvent(uint8_t num, int type, uint8_t* payload, size_t length) 
@@ -171,30 +107,19 @@ void webSocketEvent(uint8_t num, int type, uint8_t* payload, size_t length)
 
             //SET HEADER TO send
             MountJSONHeader();
-            
+
             break;
         }
         case WStype_TEXT:{
             //Serial.printf("[%u] get Text: %s\n", num, payload);
             if(payload[0] == '_')
             {
-                SetJSON();
                 // webSocket.sendTXT(num, parserJSON);
                 webSocket.sendTXT(num,"hi");
             }
             else if(payload[0] == '@') //Header Handshake
             {
                 headerReceivedByClient = true;
-            }
-            else if(payload[0] == '#') {
-                // we get RGB data
-
-                // decode rgb data
-                uint32_t rgb = (uint32_t) strtol((const char *) &payload[1], NULL, 16);
-
-                //analogWrite(redPin,    ((rgb >> 16) & 0xFF));
-                //analogWrite(greenPin,  ((rgb >> 8) & 0xFF));
-                //analogWrite(bluePin,   ((rgb >> 0) & 0xFF));
             }
             else if(payload[0] == '{') { //JSON
 
@@ -213,7 +138,6 @@ void webSocketEvent(uint8_t num, int type, uint8_t* payload, size_t length)
                     rgbLed.SetColor(v1,v2,v3);
                     rgbLed.SetMode((LedMode)mode, 800, 200);
                 }
-                Serial.println(json);
             }
             break;
         }

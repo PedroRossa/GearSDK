@@ -16,7 +16,7 @@ Gear_MPU6050::Gear_MPU6050(String name, int sdaPin, int sclPin, const int MPU_AD
     const size_t bufSize = 4*JSON_OBJECT_SIZE(3) + 60;
     jsonBuffer = new DynamicJsonBuffer(bufSize);
          
-    const char* dataJson = "{\"accel\":{\"x\":0,\"y\":0,\"z\":0},\"gyro\":{\"x\":0,\"y\":0,\"z\":0},\"angle\":{\"x\":0,\"y\":0,\"z\":0}}";
+    const char* dataJson = "{\"mpu\":{\"name\":\" name Here \",\"accel\":{\"x\":0,\"y\":0,\"z\":0},\"gyro\":{\"x\":0,\"y\":0,\"z\":0},\"angle\":{\"x\":0,\"y\":0,\"z\":0}}}";
     this->json =  &jsonBuffer->parseObject(dataJson);
 }
 
@@ -239,35 +239,37 @@ void Gear_MPU6050::init()
     initI2C();
     initMPU();
     checkMPU(MPU_ADDR);
+
+    (*this->json)["mpu"]["name"] = GetName();
 }
 
 String Gear_MPU6050::updatedData()
 {
-    int lastAccelX = (*this->json)["accel"]["x"];
-    int lastAccelY = (*this->json)["accel"]["y"];
-    int lastAccelZ = (*this->json)["accel"]["z"];
+    int lastAccelX = (*this->json)["mpu"]["accel"]["x"];
+    int lastAccelY = (*this->json)["mpu"]["accel"]["y"];
+    int lastAccelZ = (*this->json)["mpu"]["accel"]["z"];
 
     int atualAccelX = GetAccelerometer()[0];
     int atualAccelY = GetAccelerometer()[1];
     int atualAccelZ = GetAccelerometer()[2];
 
-    int lastGyroX = (*this->json)["gyro"]["x"];
-    int lastGyroY = (*this->json)["gyro"]["y"];
-    int lastGyroZ = (*this->json)["gyro"]["z"];
+    int lastGyroX = (*this->json)["mpu"]["gyro"]["x"];
+    int lastGyroY = (*this->json)["mpu"]["gyro"]["y"];
+    int lastGyroZ = (*this->json)["mpu"]["gyro"]["z"];
 
     int atualGyroX = GetGyro()[0];
     int atualGyroY = GetGyro()[1];
     int atualGyroZ = GetGyro()[2];
 
-    int lastAngleX = (*this->json)["angle"]["x"];
-    int lastAngleY = (*this->json)["angle"]["y"];
-    int lastAngleZ = (*this->json)["angle"]["z"];
+    int lastAngleX = (*this->json)["mpu"]["angle"]["x"];
+    int lastAngleY = (*this->json)["mpu"]["angle"]["y"];
+    int lastAngleZ = (*this->json)["mpu"]["angle"]["z"];
 
     double atualAngleX = GetAngle()[0];
     double atualAngleY = GetAngle()[1];
     double atualAngleZ = GetAngle()[2];
 
-    int lastTemperature = (*this->json)["temperature"];
+    int lastTemperature = (*this->json)["mpu"]["temperature"];
     int atualTemperature = GetTemperature();
     
     if(lastAccelX != atualAccelX || lastAccelY != atualAccelY || lastAccelZ != atualAccelZ ||
@@ -275,19 +277,19 @@ String Gear_MPU6050::updatedData()
         lastAngleX != atualAngleX || lastAngleY != atualAngleY || lastAngleZ != atualAngleZ || 
         lastTemperature != atualTemperature)
     {
-        (*this->json)["accel"]["x"] = atualAccelX;
-        (*this->json)["accel"]["y"] = atualAccelY;
-        (*this->json)["accel"]["z"] = atualAccelZ;
+        (*this->json)["mpu"]["accel"]["x"] = atualAccelX;
+        (*this->json)["mpu"]["accel"]["y"] = atualAccelY;
+        (*this->json)["mpu"]["accel"]["z"] = atualAccelZ;
 
-        (*this->json)["gyro"]["x"] = atualGyroX;
-        (*this->json)["gyro"]["y"] = atualGyroY;
-        (*this->json)["gyro"]["z"] = atualGyroZ;
+        (*this->json)["mpu"]["gyro"]["x"] = atualGyroX;
+        (*this->json)["mpu"]["gyro"]["y"] = atualGyroY;
+        (*this->json)["mpu"]["gyro"]["z"] = atualGyroZ;
 
-        (*this->json)["angle"]["x"] = atualAngleX;
-        (*this->json)["angle"]["y"] = atualAngleY;
-        (*this->json)["angle"]["z"] = atualAngleZ;
+        (*this->json)["mpu"]["angle"]["x"] = atualAngleX;
+        (*this->json)["mpu"]["angle"]["y"] = atualAngleY;
+        (*this->json)["mpu"]["angle"]["z"] = atualAngleZ;
 
-        (*this->json)["temperature"] = atualTemperature;
+        (*this->json)["mpu"]["temperature"] = atualTemperature;
 
         String aux = "";
         this->json->printTo(aux);

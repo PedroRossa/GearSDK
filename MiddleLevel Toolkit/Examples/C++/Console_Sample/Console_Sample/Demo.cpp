@@ -28,48 +28,49 @@ void UpdateObjects()
 
 	cout << "BUTTON: " << buttonState << endl;
 	cout << "POTENTIOMETER: " << potentiometer << endl;
-	cout << "ACELEROMETER: (" << acellX << ", " << acellY << ", " << acellZ << ")" << endl;
-	cout << "GYRO: (" << gyroX << ", " << gyroY << ", " << gyroZ << ")" << endl;
-	cout << "ANGLE: (" << angleX << ", " << angleY << ", " << angleZ << ")" << endl;
-	cout << "RGB LED: (" << r << ", " << g << ", " << b << ")" << endl;
+	//cout << "ACELEROMETER: (" << acellX << ", " << acellY << ", " << acellZ << ")" << endl;
+	//cout << "GYRO: (" << gyroX << ", " << gyroY << ", " << gyroZ << ")" << endl;
+	//cout << "ANGLE: (" << angleX << ", " << angleY << ", " << angleZ << ")" << endl;
+	//cout << "RGB LED: (" << r << ", " << g << ", " << b << ")" << endl;
 
-	this_thread::sleep_for(chrono::milliseconds(20));
-	system("cls");
+	//this_thread::sleep_for(chrono::milliseconds(20));
+	//system("cls");
 
 
 	float intensity = potentiometer / 1000.0;
 
 	if (buttonState)
 	{
-		client.wrapper.GetRGBLed(0)->SetRGB_Value((int)(intensity * 1023), (int)(intensity * 0), (int)(intensity * 1023));
-		client.wrapper.GetRGBLed(0)->SetMode(LedMode::STATIC);
-		string s = client.wrapper.GetRGBLed(0)->UpdatedJson();
-
-		client.connection.SendMessage(s);
+		//client.wrapper.GetRGBLed(0)->SetRGB_Value((int)(intensity * 1023), (int)(intensity * 0), (int)(intensity * 1023));
+		//client.wrapper.GetRGBLed(0)->SetMode(LedMode::STATIC);
+		
+		//string s = client.wrapper.GetRGBLed(0)->UpdatedJson();
+		//client.connection.SendMessage(s);
 
 	}
 	else
 	{
-		client.wrapper.GetRGBLed(0)->SetRGB_Value((int)(intensity * 0), (int)(intensity * 1023), (int)(intensity * 1023));
-		client.wrapper.GetRGBLed(0)->SetMode(LedMode::STATIC);
-
-		string s = client.wrapper.GetRGBLed(0)->UpdatedJson();
-		client.connection.SendMessage(s);
+		//client.wrapper.GetRGBLed(0)->SetRGB_Value((int)(intensity * 0), (int)(intensity * 1023), (int)(intensity * 1023));
+		//client.wrapper.GetRGBLed(0)->SetMode(LedMode::STATIC);
+		
+		//string s = client.wrapper.GetRGBLed(0)->UpdatedJson();
+		//client.connection.SendMessage(s);
 	}
 }
 
 int main()
 {
-	client = Cpp_Client("192.168.15.6", 81);
+	client = Cpp_Client("192.168.15.10", 81);
 
 	client.Init();
 
 	while (client.connection.IsConnected())
 	{
 		client.Update();
-
-		if (client.CanUpdateObjects())
-			UpdateObjects();
+		UpdateObjects();
+		//TODO: SOLVE PROBLEM WITH MPU
+		//TODO: UPDATE ALL C++ SAMPLES WITH THIS FILES
+		//TODO: UPDATE C# DLL AND SAMPLES
 	}
 
 	return 0;
