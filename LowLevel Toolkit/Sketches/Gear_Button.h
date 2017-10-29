@@ -1,10 +1,15 @@
 #ifndef Gear_Button_h
 #define Gear_Button_h
 
-#include <Arduino.h>
-#include <Wire.h>//I2C comunication
+#include "Gear_Object.h"
 
-class Gear_Button
+enum ButtonType
+{
+    PUSH_BUTTON,
+    STATE_BUTTON
+};
+
+class Gear_Button : public Gear_Object
 {
 private:
 
@@ -12,6 +17,13 @@ private:
 
     int pin;
     int state;
+    ButtonType type;
+
+#pragma endregion
+
+#pragma region Private Methods
+
+String headerJson();
 
 #pragma endregion
 
@@ -20,21 +32,24 @@ public:
 #pragma region Constructors
 
     Gear_Button();
-    Gear_Button(int pin);
+    Gear_Button(String name, int pin, ButtonType type = ButtonType::PUSH_BUTTON);
     ~Gear_Button();
 
 #pragma endregion
 
-#pragma region Getters
+#pragma region Gets
 
     int GetPin();
     int GetState();
+    int GetType();
 
 #pragma endregion
 
-#pragma region Public Attributes
+#pragma region Public Methods
 
+    String GetHeader();
     void init();
+    String updatedData();
 
 #pragma endregion
 

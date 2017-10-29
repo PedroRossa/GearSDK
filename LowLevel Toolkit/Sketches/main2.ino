@@ -1,12 +1,37 @@
 #include "declarations.h"
 #include "Gear_Server.h"
 
-void StartMPU()
+void InitOjbects()
 {
-  Serial.println("\nStart MPU6050\n");
-  g_mpu.initI2C();
-  g_mpu.initMPU();
-  g_mpu.checkMPU(MPU_ADDR);
+    g_mpu.init();
+    button_0.init();
+    
+    rgbLed.init();
+    rgbLed.SetColor(1023,256,0);
+    
+    pot.init();
+    
+    wifi.InitWiFi();
+}
+
+String MountJSONHeader()
+{
+    jsonHeader = "{\"header\":";
+    jsonHeader = jsonHeader + "{\"buttons\":[";
+    jsonHeader = jsonHeader + button_0.GetHeader() + "],";
+
+    jsonHeader = jsonHeader + "\"potentiometers\":[";
+    jsonHeader = jsonHeader + pot.GetHeader() + "],";
+
+    jsonHeader = jsonHeader + "\"rgb_leds\":[";
+    jsonHeader = jsonHeader + rgbLed.GetHeader() + "],";
+
+    jsonHeader = jsonHeader + "\"mpus\":[";
+    jsonHeader = jsonHeader + g_mpu.GetHeader() + "]";
+    
+    jsonHeader = jsonHeader + "}}";
+    
+    return jsonHeader;
 }
 
 void SetJSON()
@@ -47,6 +72,43 @@ void SetJSON()
     jsonRoot.printTo(parserJSON);
 }
 
+void SendObjects()
+{
+    String s = button_0.updatedData();
+    
+    if(s != "")
+    {
+        Serial.print("Button: ");
+        Serial.println(s);
+        //webSocket.sendTXT(0, s);
+    }
+
+    s = pot.updatedData();
+
+    if(s != "")
+    {
+        //Serial.print("Potentiometer: ");
+        //Serial.println(s);
+        //webSocket.sendTXT(0, s);
+    }
+
+    s = rgbLed.updatedData();
+    
+    if(s != "")
+    {
+        Serial.println("RGBLed: ");
+        Serial.println(s);
+    }
+
+    s = g_mpu.updatedData();
+        
+    if(s != "")
+    {
+       // Serial.println("MPU: ");
+        //Serial.println(s);
+    }
+}
+
 void setup() 
 {
     Serial.begin(115200);
@@ -57,16 +119,7 @@ void setup()
         delay(1000);
     }
 
-    StartMPU();
-
-    button_0.init();
-
-    rgbLed.init();
-    rgbLed.SetColor(1023,256,0);
-
-    pot.init();
-
-    wifi.InitWiFi();
+    InitOjbects();
 
     ConfigWebServer();
 
@@ -83,7 +136,7 @@ void loop()
 
     if(!headerReceivedByClient)
     {
-        webSocket.sendTXT(0, header_parserJSON);
+        webSocket.sendTXT(0, jsonHeader);
     }
     else
     {
@@ -92,7 +145,7 @@ void loop()
     }
 
     WebServerLoop();
-
+    SendObjects();
     //24 fps
     delay(40);
 }
@@ -101,11 +154,11 @@ void webSocketEvent(uint8_t num, int type, uint8_t* payload, size_t length)
 {
     switch(type) 
     {
-        case WStype_DISCONNECTED:
+        case WStype_DISCONNECTED:{
             Serial.printf("[%u] Disconnected!\n", num);
             rgbLed.SetColor(1023,0,0);
             break;
-        
+        }
         case WStype_CONNECTED: {
             IPAddress ip = webSocket.remoteIP(num);
             Serial.printf("[%u] Connected from %d.%d.%d.%d url: %s\n", num, ip[0], ip[1], ip[2], ip[3], payload);
@@ -117,13 +170,12 @@ void webSocketEvent(uint8_t num, int type, uint8_t* payload, size_t length)
             headerReceivedByClient = false;
 
             //SET HEADER TO send
-            header_parserJSON = "";
-            header_jsonRoot.printTo(header_parserJSON);
-        }
+            MountJSONHeader();
+            
             break;
-        case WStype_TEXT:
+        }
+        case WStype_TEXT:{
             //Serial.printf("[%u] get Text: %s\n", num, payload);
-
             if(payload[0] == '_')
             {
                 SetJSON();
@@ -159,24 +211,23 @@ void webSocketEvent(uint8_t num, int type, uint8_t* payload, size_t length)
                     int v3 = root["value"]["b"];
 
                     rgbLed.SetColor(v1,v2,v3);
-
-                    
                     rgbLed.SetMode((LedMode)mode, 800, 200);
                 }
-                //Serial.println(json);
+                Serial.println(json);
             }
-
             break;
-        
-        case WStype_BIN:
+        }
+        case WStype_BIN:{
             Serial.printf("[%u] get binary length: %u\r\n", num, length);
             hexdump(payload, length);
       
             // echo data back to browser
             //webSocket.sendBIN(num, payload, length);
             break;
-          default:
+        }
+        default:{
             Serial.printf("Invalid WStype [%d]\r\n", type);
             break;
+        }
     }
 }

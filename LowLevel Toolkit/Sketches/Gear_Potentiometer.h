@@ -1,10 +1,9 @@
 #ifndef Gear_Potentiometer_h
 #define Gear_Potentiometer_h
 
-#include <Arduino.h>
-#include <Wire.h>//I2C comunication
+#include "Gear_Object.h"
 
-class Gear_Potentiometer
+class Gear_Potentiometer : public Gear_Object
 {
 private:
 
@@ -15,17 +14,23 @@ private:
 
 #pragma endregion
 
+#pragma region Private Methods
+
+String headerJson();
+
+#pragma endregion
+
 public:
 
 #pragma region Constructors
 
     Gear_Potentiometer();
-    Gear_Potentiometer(int pin);
+    Gear_Potentiometer(String name, int pin);
     ~Gear_Potentiometer();
 
 #pragma endregion
 
-#pragma region Getters
+#pragma region Gets
 
     int GetPin();
     float GetValue();
@@ -34,7 +39,9 @@ public:
 
 #pragma region Public Attributes
 
+    String GetHeader();
     void init();
+    String updatedData();
 
 #pragma endregion
 

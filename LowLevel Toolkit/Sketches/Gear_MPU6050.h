@@ -1,10 +1,9 @@
 #ifndef Gear_MPU6050_h
 #define Gear_MPU6050_h
 
-#include <Arduino.h>
-#include <Wire.h>//I2C comunication
+#include "Gear_Object.h"
 
-class Gear_MPU6050
+class Gear_MPU6050 : public Gear_Object
 {
 private:
 
@@ -20,8 +19,8 @@ private:
     const int ACCEL_CONFIG =  0x1C; // registro de configuração do acelerômetro
     const int ACCEL_XOUT =    0x3B; // registro de leitura do eixo X do acelerômetro
     
-    const int sda_pin = D5; // definição do pino I2C SDA
-    const int scl_pin = D6; // definição do pino I2C SCL
+    int sdaPin; // definição do pino I2C SDA
+    int sclPin; // definição do pino I2C SCL
 
     // variáveis para armazenar os dados "crus" do acelerômetro
     int16_t accelerometer[3];
@@ -31,7 +30,10 @@ private:
 
 #pragma endregion
 
-    //Private Methods
+#pragma region Private Methods
+
+    String headerJson();
+
     void writeRegMPU(int reg, int val); //aceita um registro e um valor como parâmetro
     uint8_t readRegMPU(uint8_t reg); // aceita um registro como parâmetro
 
@@ -40,33 +42,51 @@ private:
     void setSleepOff();
     void setGyroScale();
     void setAccelScale();
- 
+
+    void initI2C();
+    void initMPU();
+
+    void checkMPU(int mpu_addr);
+
+#pragma endregion
+
 public:
 
-    //Constructors
+#pragma region Constructors
+
     Gear_MPU6050();
-    Gear_MPU6050(const int MPU_ADDR = 0x68);
+    Gear_MPU6050(String name, int sdaPin = D5, int sclPin = D6, const int MPU_ADDR = 0x68);
     ~Gear_MPU6050();
 
-    //Getters
+#pragma endregion
+
+#pragma region Gets
+
     int16_t* GetAccelerometer();
     int16_t* GetGyro();
     int16_t GetTemperature();
+
+    int GetSDAPin();
+    int GetSCLPin();
 
     double* GetAngle();
     double GetAngleX();
     double GetAngleY();
     double GetAngleZ();
 
-    //Public Methods
-    void initI2C();
-    void initMPU();
+#pragma endregion
 
-    void checkMPU(int mpu_addr);
-    
+#pragma region Public Methods
+
     void readRawMPU();
-
     void CalculateAngles();
+
+    String GetHeader();
+    void init();
+    String updatedData();
+
+#pragma endregion
+
 };
 
 #endif

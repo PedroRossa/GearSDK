@@ -1,9 +1,7 @@
 #ifndef Gear_RGBLed_h
 #define Gear_RGBLed_h
 
-#include <Arduino.h>
-#include <Wire.h>//I2C comunication
-
+#include "Gear_Object.h"
 #include "Gear_Color.h"
 
 enum LedMode
@@ -15,7 +13,7 @@ enum LedMode
     FADING
 };
 
-class Gear_RGBLed
+class Gear_RGBLed : public Gear_Object
 {
 private:
 
@@ -43,6 +41,8 @@ private:
 
 #pragma region Private Methods
 
+    String headerJson();
+
     void SendState();
 
     void blinkMode();
@@ -59,12 +59,12 @@ public:
 
     Gear_RGBLed();
     //Gear_RGBLed(int r_pin, int g_pin, int b_pin, Gear_Color color = Gear_Color(Colors::white));
-    Gear_RGBLed(int r_pin, int g_pin, int b_pin, LedMode mode = LedMode::STATIC, bool isAnalogic = true);
+    Gear_RGBLed(String name, int r_pin, int g_pin, int b_pin, LedMode mode = LedMode::STATIC, bool isAnalogic = true);
     ~Gear_RGBLed();
 
 #pragma endregion
 
-#pragma region Getters And Setters
+#pragma region Gets And Sets
 
     bool IsAnalogic();
     void IsAnalogic(bool isAnalogic);
@@ -91,8 +91,10 @@ public:
 
 #pragma region Public Attributes
 
+    String GetHeader();
     void init();
-
+    String updatedData();
+    
     void update();
 
 #pragma endregion

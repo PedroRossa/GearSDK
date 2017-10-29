@@ -60,7 +60,7 @@ void UpdateObjects()
 
 int main()
 {
-	client = Cpp_Client("192.168.15.9", 81);
+	client = Cpp_Client("192.168.15.6", 81);
 
 	client.Init();
 

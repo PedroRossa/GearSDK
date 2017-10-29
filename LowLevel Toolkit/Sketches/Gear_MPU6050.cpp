@@ -4,20 +4,34 @@
 
 Gear_MPU6050::Gear_MPU6050(){}
 
-Gear_MPU6050::Gear_MPU6050(const int MPU_ADDR)
+Gear_MPU6050::Gear_MPU6050(String name, int sdaPin, int sclPin, const int MPU_ADDR)
 {
+    this->name = name;
+    this->sdaPin = sdaPin;
+    this->sclPin = sclPin;
     this->MPU_ADDR = MPU_ADDR;
+
+    this->header = headerJson();
+    
+    const size_t bufSize = 4*JSON_OBJECT_SIZE(3) + 60;
+    jsonBuffer = new DynamicJsonBuffer(bufSize);
+         
+    const char* dataJson = "{\"accel\":{\"x\":0,\"y\":0,\"z\":0},\"gyro\":{\"x\":0,\"y\":0,\"z\":0},\"angle\":{\"x\":0,\"y\":0,\"z\":0}}";
+    this->json =  &jsonBuffer->parseObject(dataJson);
 }
 
 Gear_MPU6050::~Gear_MPU6050(){}
 
 #pragma endregion
 
-#pragma region Getters
+#pragma region Gets
 
 int16_t* Gear_MPU6050::GetAccelerometer(){ return this->accelerometer; }
 int16_t* Gear_MPU6050::GetGyro(){ return this->gyro; }
 int16_t Gear_MPU6050::GetTemperature(){ return this->temperature; }
+
+int Gear_MPU6050::GetSDAPin(){ return this->sdaPin; }
+int Gear_MPU6050::GetSCLPin(){ return this->sclPin; }
 
 double* Gear_MPU6050::GetAngle(){ return this->angle; }
 double Gear_MPU6050::GetAngleX(){ return this->angle[0]; }
@@ -28,6 +42,22 @@ double Gear_MPU6050::GetAngleZ(){ return this->angle[2]; }
 
 #pragma region Private Methods
     
+String Gear_MPU6050::headerJson()
+{
+    String hJson = "{";
+    hJson = hJson + "\"name\"" + ":" + "\"" + this->name + "\",";
+    hJson = hJson + "\"pins\"" + ":" + "\"" + this->sdaPin + "," + this->sclPin+ "\",";
+    hJson = hJson + "\"accel\"" + ":";
+    hJson = hJson + "{" + "\"x\": 0, \"y\": 0, \"z\": 0 },";
+    hJson = hJson + "\"gyro\"" + ":";
+    hJson = hJson + "{" + "\"x\": 0, \"y\": 0, \"z\": 0 },";
+    hJson = hJson + "\"angle\"" + ":";
+    hJson = hJson + "{" + "\"x\": 0, \"y\": 0, \"z\": 0 }";
+    hJson = hJson + "}";
+
+    return hJson;
+}
+
 /*  função que escreve um dado valor em um dado registro */
 void Gear_MPU6050::writeRegMPU(int reg, int val)
 {
@@ -102,17 +132,13 @@ void Gear_MPU6050::setAccelScale()
     writeRegMPU(ACCEL_CONFIG, 0);
 }
 
-#pragma endregion
-
-#pragma region Public Methods
-
 /* função que configura a I2C com os pinos desejados 
     * sda_pin -> D5
     * scl_pin -> D6
 */
 void Gear_MPU6050::initI2C() 
 {
-    Wire.begin(sda_pin, scl_pin);
+    Wire.begin(sdaPin, sclPin);
 }
 
 /* função de inicialização do sensor */
@@ -122,7 +148,6 @@ void Gear_MPU6050::initMPU()
     setGyroScale();
     setAccelScale();
 }
-
 
 /* função que verifica se o sensor responde e se está ativo */
 void Gear_MPU6050::checkMPU(int mpu_addr)
@@ -144,6 +169,10 @@ void Gear_MPU6050::checkMPU(int mpu_addr)
         Serial.println("Verify device - MPU6050 Unavailable!");
     }
 } 
+
+#pragma endregion
+
+#pragma region Public Methods
 
 /* função que lê os dados 'crus'(raw data) do sensor
    são 14 bytes no total sendo eles 2 bytes para cada eixo e 2 bytes para temperatura:
@@ -201,6 +230,73 @@ void Gear_MPU6050::CalculateAngles()
     angle[0] = RAD_TO_DEG * (atan2(-yAng, -zAng)+PI); 
     angle[1] = RAD_TO_DEG * (atan2(-xAng, -zAng)+PI); 
     angle[2] = RAD_TO_DEG * (atan2(-yAng, -xAng)+PI);
+}
+
+String Gear_MPU6050::GetHeader(){ return this->header; }
+
+void Gear_MPU6050::init()
+{
+    initI2C();
+    initMPU();
+    checkMPU(MPU_ADDR);
+}
+
+String Gear_MPU6050::updatedData()
+{
+    int lastAccelX = (*this->json)["accel"]["x"];
+    int lastAccelY = (*this->json)["accel"]["y"];
+    int lastAccelZ = (*this->json)["accel"]["z"];
+
+    int atualAccelX = GetAccelerometer()[0];
+    int atualAccelY = GetAccelerometer()[1];
+    int atualAccelZ = GetAccelerometer()[2];
+
+    int lastGyroX = (*this->json)["gyro"]["x"];
+    int lastGyroY = (*this->json)["gyro"]["y"];
+    int lastGyroZ = (*this->json)["gyro"]["z"];
+
+    int atualGyroX = GetGyro()[0];
+    int atualGyroY = GetGyro()[1];
+    int atualGyroZ = GetGyro()[2];
+
+    int lastAngleX = (*this->json)["angle"]["x"];
+    int lastAngleY = (*this->json)["angle"]["y"];
+    int lastAngleZ = (*this->json)["angle"]["z"];
+
+    double atualAngleX = GetAngle()[0];
+    double atualAngleY = GetAngle()[1];
+    double atualAngleZ = GetAngle()[2];
+
+    int lastTemperature = (*this->json)["temperature"];
+    int atualTemperature = GetTemperature();
+    
+    if(lastAccelX != atualAccelX || lastAccelY != atualAccelY || lastAccelZ != atualAccelZ ||
+        lastGyroX != atualGyroX || lastGyroY != atualGyroY || lastGyroZ != atualGyroZ ||
+        lastAngleX != atualAngleX || lastAngleY != atualAngleY || lastAngleZ != atualAngleZ || 
+        lastTemperature != atualTemperature)
+    {
+        (*this->json)["accel"]["x"] = atualAccelX;
+        (*this->json)["accel"]["y"] = atualAccelY;
+        (*this->json)["accel"]["z"] = atualAccelZ;
+
+        (*this->json)["gyro"]["x"] = atualGyroX;
+        (*this->json)["gyro"]["y"] = atualGyroY;
+        (*this->json)["gyro"]["z"] = atualGyroZ;
+
+        (*this->json)["angle"]["x"] = atualAngleX;
+        (*this->json)["angle"]["y"] = atualAngleY;
+        (*this->json)["angle"]["z"] = atualAngleZ;
+
+        (*this->json)["temperature"] = atualTemperature;
+
+        String aux = "";
+        this->json->printTo(aux);
+        return aux;
+    }
+    else
+    {
+        return "";
+    }
 }
 
 #pragma endregion

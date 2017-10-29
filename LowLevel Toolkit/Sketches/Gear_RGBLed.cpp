@@ -13,8 +13,9 @@
         this->color = color;
     }*/
 
-    Gear_RGBLed::Gear_RGBLed(int r_pin, int g_pin, int b_pin, LedMode mode, bool isAnalogic)
+    Gear_RGBLed::Gear_RGBLed(String name, int r_pin, int g_pin, int b_pin, LedMode mode, bool isAnalogic)
     {
+        this->name = name;
         this->isAnalogic = isAnalogic;
         this->state = HIGH;
 
@@ -23,13 +24,21 @@
         this->r_pin = r_pin;
         this->g_pin = g_pin;
         this->b_pin = b_pin;
+
+        this->header = headerJson();
+        
+        const size_t bufSize = JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(3) + 40;
+        jsonBuffer = new DynamicJsonBuffer(bufSize);
+             
+        const char* dataJson = "{\"mode\":2,\"value\":{\"r\":0,\"g\":1023,\"b\":0}}";
+        this->json =  &jsonBuffer->parseObject(dataJson);
     }
 
     Gear_RGBLed::~Gear_RGBLed(){}
 
 #pragma endregion
 
-#pragma region Getters And Setters
+#pragma region Gets And Sets
 
 bool Gear_RGBLed::IsAnalogic(){ return this->isAnalogic; }
 void Gear_RGBLed::IsAnalogic(bool isAnalogic){ this->isAnalogic = isAnalogic; }
@@ -75,6 +84,19 @@ void Gear_RGBLed::SetColor(int r, int g, int b)
 #pragma endregion
 
 #pragma region Private Methods
+
+String Gear_RGBLed::headerJson()
+{
+    String hJson = "{";
+    hJson = hJson + "\"name\"" + ":" + "\"" + this->name + "\",";
+    hJson = hJson + "\"pin\"" + ":" +  "\"" +  this->r_pin + "," + this->g_pin + "," + this->b_pin + "\",";
+    hJson = hJson + "\"mode\"" + ":" + this->mode + ",";
+    hJson = hJson + "\"value\"" + ":";
+    hJson = hJson + "{\"r\":0, \"g\":1023, \"b\":0}";
+    hJson = hJson + "}";
+
+    return hJson;
+}
 
 void Gear_RGBLed::SendState()
 {
@@ -141,13 +163,14 @@ void Gear_RGBLed::fadingMode()
 
 #pragma region Public Attributes
 
+String Gear_RGBLed::GetHeader(){ return this->header; }
+
 void Gear_RGBLed::init()
 {
     pinMode(this->r_pin, OUTPUT);
     pinMode(this->g_pin, OUTPUT);
     pinMode(this->b_pin, OUTPUT);
 }
-
 
 void Gear_RGBLed::update()
 {
@@ -175,8 +198,40 @@ void Gear_RGBLed::update()
         default:
         break;
     } 
-
     this->SendState();
+}
+
+String Gear_RGBLed::updatedData()
+{
+    //{\"mode\":2,\"value\":{\"r\":0,\"g\":1023,\"b\":0}}
+
+    int lastMode = (*this->json)["mode"];
+    int atualMode = GetMode();
+    Gear_Color color = GetColor();
+
+    int lastR = (*this->json)["value"]["r"];
+    int lastG = (*this->json)["value"]["g"];
+    int lastB = (*this->json)["value"]["b"];
+
+    int atualR = color.GetR();
+    int atualG = color.GetG();
+    int atualB = color.GetB();
+
+    if(lastMode != atualMode || lastR != atualR || lastG != atualG || lastB != atualB)
+    {
+        (*this->json)["mode"] = atualMode;
+        (*this->json)["value"]["r"] = atualR;
+        (*this->json)["value"]["g"] = atualG;
+        (*this->json)["value"]["b"] = atualB;
+
+        String aux = "";
+        this->json->printTo(aux);
+        return aux;
+    }
+    else
+    {
+        return "";
+    }
 }
 
 #pragma endregion

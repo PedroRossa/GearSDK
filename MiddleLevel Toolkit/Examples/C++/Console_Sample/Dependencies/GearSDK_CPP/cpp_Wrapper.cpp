@@ -22,7 +22,7 @@ Gear_Button_cpp* cpp_Wrapper::CreateButton(json::value values)
 {
 	string name = utility::conversions::to_utf8string(values.at(U("name")).as_string());
 	string pin = utility::conversions::to_utf8string(values.at(U("pin")).as_string());
-	bool state = values.at(U("state")).as_bool();
+	int state = values.at(U("state")).as_integer();
 	int type = values.at(U("type")).as_integer();
 
 	Gear_Button_cpp* btn = new Gear_Button_cpp(this->buttons->size(), name, pin, state, type);
