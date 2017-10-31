@@ -16,7 +16,8 @@ Gear_MPU6050::Gear_MPU6050(String name, int sdaPin, int sclPin, const int MPU_AD
     const size_t bufSize = 4*JSON_OBJECT_SIZE(3) + 60;
     jsonBuffer = new DynamicJsonBuffer(bufSize);
          
-    const char* dataJson = "{\"mpu\":{\"name\":\" name Here \",\"accel\":{\"x\":0,\"y\":0,\"z\":0},\"gyro\":{\"x\":0,\"y\":0,\"z\":0},\"angle\":{\"x\":0,\"y\":0,\"z\":0}}}";
+    const char* dataJson = "{\"mpu\":{\"name\":\" name Here \",\"accel\":{\"x\":0,\"y\":0,\"z\":0},\"gyro\":{\"x\":0,\"y\":0,\"z\":0},\"angle\":{\"x\":0,\"y\":0,\"z\":0}}";
+        
     this->json =  &jsonBuffer->parseObject(dataJson);
 }
 

@@ -102,8 +102,13 @@ Gear_MPU6050_cpp* cpp_Wrapper::CreateMPU6050(json::value values)
 }
 
 
-void cpp_Wrapper::UpdateButton()
+void cpp_Wrapper::UpdateButton(string data)
 {
+	this->jsonValue = StringToJson(data);
+
+	if (this->jsonValue == NULL)
+		return;
+	
 	try
 	{
 		auto jsonButton = this->jsonValue.at(U("button"));
@@ -126,8 +131,13 @@ void cpp_Wrapper::UpdateButton()
 	}
 }
 
-void cpp_Wrapper::UpdatePotentiometer()
+void cpp_Wrapper::UpdatePotentiometer(string data)
 {
+	this->jsonValue = StringToJson(data);
+
+	if (this->jsonValue == NULL)
+		return;
+
 	try
 	{
 		auto jsonPotentiometer = this->jsonValue.at(U("potentiometer"));
@@ -150,8 +160,13 @@ void cpp_Wrapper::UpdatePotentiometer()
 	}
 }
 
-void cpp_Wrapper::UpdateRGBLed()
+void cpp_Wrapper::UpdateRGBLed(string data)
 {
+	this->jsonValue = StringToJson(data);
+
+	if (this->jsonValue == NULL)
+		return;
+
 	try
 	{
 		auto jsonRgbLed = this->jsonValue.at(U("rgb_led"));
@@ -182,8 +197,13 @@ void cpp_Wrapper::UpdateRGBLed()
 	}
 }
 
-void cpp_Wrapper::UpdateMpu()
+void cpp_Wrapper::UpdateMpu(string data)
 {
+	this->jsonValue = StringToJson(data);
+
+	if (this->jsonValue == NULL)
+		return;
+
 	try
 	{
 		auto jsonMpu = this->jsonValue.at(U("mpu"));
@@ -420,85 +440,25 @@ void cpp_Wrapper::Init(string header)
 
 void cpp_Wrapper::UpdateObjects(string data)
 {
-	this->jsonValue = StringToJson(data);
-
-	if (this->jsonValue != NULL)
+	try
 	{
-		try
+		vector<string> jsons = split(data, "@");
+
+		for (int i = 0; i < jsons.size(); i++)
 		{
-			if (data.find("button") != std::string::npos)
-			{
-				UpdateButton();
-			}
-			else if (data.find("potentiometer") != std::string::npos)
-			{
-				UpdatePotentiometer();
-			}
-			else if (data.find("rgb_led") != std::string::npos)
-			{
-				UpdateRGBLed();
-			}
-			else if (data.find("mpu") != std::string::npos)
-			{
-				UpdateMpu();
-			}
-
-			//	t_key = conversions::to_string_t("mpus");
-
-			//	json::array data_mpus = data.at(t_key).as_array();
-
-			//	for (size_t i = 0; i < this->mpus->size(); i++)
-			//	{
-			//		string str_accel = "accel";
-			//		string_t key = conversions::to_string_t(str_accel);
-			//		
-			//		auto accel_vals = data_mpus[i].at(key).as_object();
-			//		int accel[3] = { 0,0,0 };
-
-			//		accel[0] = accel_vals.at(U("x")).as_integer();
-			//		accel[1] = accel_vals.at(U("y")).as_integer();
-			//		accel[2] = accel_vals.at(U("z")).as_integer();
-
-			//		auto gyro_vals = data_mpus[i].at(U("gyro")).as_object();
-			//		int gyro[3] = { 0,0,0 };
-
-			//		gyro[0] = gyro_vals.at(U("x")).as_integer();
-			//		gyro[1] = gyro_vals.at(U("y")).as_integer();
-			//		gyro[2] = gyro_vals.at(U("z")).as_integer();
-
-			//		auto angle_vals = data_mpus[i].at(U("angle")).as_object();
-			//		double angle[3] = { 0,0,0 };
-
-			//		angle[0] = angle_vals.at(U("x")).as_double();
-			//		angle[1] = angle_vals.at(U("y")).as_double();
-			//		angle[2] = angle_vals.at(U("z")).as_double();
-
-			//		this->mpus->at(i)->SetAccelValues(accel);
-			//		this->mpus->at(i)->SetGyroValues(gyro);
-			//		this->mpus->at(i)->SetAngleValues(angle);
-			//	}
-
-			//	/*{
-			//	"name": "rgb_led_0",
-			//	"pin" : "D3,D4,D5",
-			//	"mode" : "BLINKING",
-			//	"value" : {
-			//	"r": 0,
-			//	"g" : 1023,
-			//	"b" : 0
-			//	}*/
-
-			//}
-			//catch (const std::exception& e)
-			//{
-			//	cout << "Exception: " << e.what() << endl;
-			//}
-
+			if (jsons[i].find("button") != std::string::npos)
+				UpdateButton(jsons[i]);
+			else if (jsons[i].find("potentiometer") != std::string::npos)
+				UpdatePotentiometer(jsons[i]);
+			else if (jsons[i].find("rgb_led") != std::string::npos)
+				UpdateRGBLed(jsons[i]);
+			else if (jsons[i].find("mpu") != std::string::npos)
+				UpdateMpu(jsons[i]);
 		}
-		catch (const std::exception& e)
-		{
-			cout << "Exception: " << e.what() << endl;
-		}
+	}
+	catch (const std::exception& e)
+	{
+		cout << "Exception: " << e.what() << endl;
 	}
 }
 

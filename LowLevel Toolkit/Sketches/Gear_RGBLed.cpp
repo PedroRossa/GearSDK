@@ -31,6 +31,7 @@
         jsonBuffer = new DynamicJsonBuffer(bufSize);
              
         const char* dataJson = "{\"rgb_led\":{\"name\":\" name Here \",\"mode\":2,\"value\":{\"r\":0,\"g\":1023,\"b\":0}}}";
+    
         this->json =  &jsonBuffer->parseObject(dataJson);
     }
 

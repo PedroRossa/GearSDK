@@ -15,6 +15,7 @@
         jsonBuffer = new DynamicJsonBuffer(bufSize);
              
         const char* dataJson = "{\"potentiometer\":{\"name\":\" name Here \", \"value\":0}}";
+            
         this->json =  &jsonBuffer->parseObject(dataJson);
     }
 

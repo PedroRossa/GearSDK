@@ -38,10 +38,10 @@ class cpp_Wrapper
 	Gear_RGBLed_cpp* CreateRGBLed(json::value values);
 	Gear_MPU6050_cpp* CreateMPU6050(json::value values);
 
-	void UpdateButton();
-	void UpdatePotentiometer();
-	void UpdateRGBLed();
-	void UpdateMpu();
+	void UpdateButton(string data);
+	void UpdatePotentiometer(string data);
+	void UpdateRGBLed(string data);
+	void UpdateMpu(string data);
 
 #pragma endregion
 	

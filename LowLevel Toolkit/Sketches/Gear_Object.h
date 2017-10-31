@@ -12,6 +12,7 @@ protected:
 
 #pragma region Attributes
 
+    uint id;
     String name;        
     String header;
 
@@ -37,6 +38,7 @@ public:
 
 #pragma region Gets
 
+    uint GetID();
     String GetName();
     JsonObject* GetJson();
 

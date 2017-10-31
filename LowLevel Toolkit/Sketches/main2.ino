@@ -36,17 +36,23 @@ String MountJSONHeader()
 
 void SendObjects()
 {
+    String message = "";
     String s = button_0.updatedData();
-    if(s != "") { webSocket.sendTXT(0, s); }
+    message = message + s;
 
     s = pot.updatedData();
-    if(s != "") { webSocket.sendTXT(0, s); }
+    message = message + "@" + s;
 
     s = rgbLed.updatedData();
-    if(s != "") { webSocket.sendTXT(0, s); }
+    message = message + "@" + s;
 
     s = g_mpu.updatedData();
-    if(s != "") { webSocket.sendTXT(0, s); }
+    message = message + "@" +  s;
+
+    if(message != ""){
+        webSocket.sendTXT(0, message);
+        Serial.println(message);
+    }
 }
 
 void setup() 
@@ -81,6 +87,7 @@ void loop()
     else
     { 
         SendObjects();
+        delay(40);
     }
 
     WebServerLoop();
