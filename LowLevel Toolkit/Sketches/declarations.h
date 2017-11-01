@@ -19,7 +19,10 @@ const int MPU_ADDR = 0x68;
 bool headerReceivedByClient = false;
 String jsonHeader;
 
-int id = 0;
+enum JsonObjectType
+{
+    RGB_LED
+};
 
 //OBJECTS
 Gear_WiFiConnection wifi(SSID, PASSWORD);

@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace csharp_sample.Gear_Objects
+namespace GearSDK_CSharpDLL.Gear_Objects
 {
-    class Gear_MPU6050_csharp
+    public class Gear_MPU6050_csharp
     {
         #region Private Attributes
 

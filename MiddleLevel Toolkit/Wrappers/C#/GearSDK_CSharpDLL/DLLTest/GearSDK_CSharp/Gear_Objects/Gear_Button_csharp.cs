@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace csharp_sample.Gear_Objects
+namespace GearSDK_CSharpDLL.Gear_Objects
 {
-    class Gear_Button_csharp
+    public class Gear_Button_csharp
     {
         #region Attributes
 

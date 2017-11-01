@@ -2,17 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 using GearSDK_CSharpDLL;
 
-namespace Console_Sample
+namespace DLLTest
 {
     class Program
     {
         static void Main(string[] args)
         {
-           csharp_Client client = GearSDK.CreateClient("192.168.15.4", 81);
+            csharp_Client client = GearSDK.CreateClient("192.168.15.4", 81);
 
             client.Init();
 
@@ -55,20 +54,19 @@ namespace Console_Sample
                     client.wrapper.RgbLeds[0].SetMode(Helper.LedMode.STATIC);
                     //wrapper.GetRGBLed(0)->SetMode(LedMode::BLINKING, 500, 100);
                     string s = client.wrapper.RgbLeds[0].UpdatedJson();
-
+                
                     client.connection.SendMessage(s);
-
                 }
                 else
                 {
                     client.wrapper.RgbLeds[0].SetRGB_Value((int)(intensity * 0), (int)(intensity * 1023), (int)(intensity * 1023));
                     client.wrapper.RgbLeds[0].SetMode(Helper.LedMode.STATIC);
-
+                
                     string s = client.wrapper.RgbLeds[0].UpdatedJson();
                     client.connection.SendMessage(s);
                 }
 
-                System.Threading.Thread.Sleep(50);
+                System.Threading.Thread.Sleep(40);
                 Console.Clear();
             }
         }

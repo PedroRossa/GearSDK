@@ -90,12 +90,15 @@ namespace GearSDK_CSharpDLL
             this.isConnected = false;
         }
 
+        void MessageSended()
+        {
+        }
 
         public bool SendMessage(string message)
         {
             try
             {
-                webSocketClient.Send(message);
+                webSocketClient.SendAsync(message, null);
             }
             catch (Exception e)
             {

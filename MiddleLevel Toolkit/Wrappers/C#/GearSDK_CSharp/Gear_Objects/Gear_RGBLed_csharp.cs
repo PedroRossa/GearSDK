@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace csharp_sample.Gear_Objects
+namespace GearSDK_CSharpDLL.Gear_Objects
 {
-    class Gear_RGBLed_csharp
+    public class Gear_RGBLed_csharp
     {
         #region Attributes
 
@@ -99,15 +98,13 @@ namespace csharp_sample.Gear_Objects
         {
             /*{
                 "name": "rgb_led_0",
-                "pin": "D3,D4,D5",
                 "mode": "BLINKING",
                 "value": { "r": 0, "g": 1023, "b": 0 }
                 }*/
-            string val = "{\"name\":\"" + this.name + "\",";
-            val += "\"pin\":\"" + this.pin_r + "," + this.pin_g + "," + this.pin_b + "\",";
+            string val = "{\"rgb_led\":{\"name\":\"" + this.name + "\",";
             val += "\"mode\":" + this.mode + ",";
             val += "\"value\": {\"r\":" + this.r_value + ", \"g\":" + this.g_value + ", \"b\":" + this.b_value;
-            val += "}}";
+            val += "}}}";
 
             return val;
         }

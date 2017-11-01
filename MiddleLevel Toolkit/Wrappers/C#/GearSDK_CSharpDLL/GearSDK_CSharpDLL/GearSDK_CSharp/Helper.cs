@@ -64,28 +64,32 @@ namespace GearSDK_CSharpDLL
 
     public class Data_Button
     {
+        public string name { get; set; }
         public int state { get; set; }
-        public int type { get; set; }
     }
 
     public class Data_Potentiometer
     {
+        public string name { get; set; }
         public int value { get; set; }
     }
 
     public class Data_RgbLed
     {
+        public string name { get; set; }
         public int mode { get; set; }
         public Value value { get; set; }
     }
 
     public class Data_Led
     {
+        public string name { get; set; }
         public int value { get; set; }
     }
 
     public class Data_Mpu
     {
+        public string name { get; set; }
         public Accel accel { get; set; }
         public Gyro gyro { get; set; }
         public Angle angle { get; set; }
@@ -129,23 +133,30 @@ namespace GearSDK_CSharpDLL
         public List<Header_Led> leds { get; set; }
         public List<Header_Mpu> mpus { get; set; }
     }
-
-    public class Data
-    {
-        public List<Data_Button> buttons { get; set; }
-        public List<Data_Potentiometer> potentiometers { get; set; }
-        public List<Data_RgbLed> rgb_leds { get; set; }
-        public List<Data_Led> leds { get; set; }
-        public List<Data_Mpu> mpus { get; set; }
-    }
+    
 
     public class Header_RootObject
     {
         public Header header { get; set; }
     }
 
-    public class Data_RootObject
+    public class Root_Button
     {
-        public Data data { get; set; }
+        public Data_Button button { get; set; }
+    }
+
+    public class Root_Potentiometer
+    {
+        public Data_Potentiometer potentiometer { get; set; }
+    }
+
+    public class Root_Mpu
+    {
+        public Data_Mpu mpu { get; set; }
+    }
+
+    public class Root_RgbLed
+    {
+        public Data_RgbLed rgbLed { get; set; }
     }
 }

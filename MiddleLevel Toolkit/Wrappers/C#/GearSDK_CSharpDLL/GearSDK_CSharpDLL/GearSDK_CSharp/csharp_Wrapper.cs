@@ -17,7 +17,7 @@ namespace GearSDK_CSharpDLL
         List<Gear_Objects.Gear_Potentiometer_csharp> potentiometers;
         List<Gear_Objects.Gear_RGBLed_csharp> rgbLeds;
         List<Gear_Objects.Gear_MPU6050_csharp> mpus;
-        
+
         #endregion
 
         #region Private Methods
@@ -163,50 +163,47 @@ namespace GearSDK_CSharpDLL
 
         public void UpdateObjects(string data)
         {
-            if (data.Contains("data"))
+            string[] jsons = data.Split('@');
+
+            for (int i = 0; i < jsons.Length; i++)
             {
                 try
                 {
-                    Data_RootObject d_root = JsonConvert.DeserializeObject<Data_RootObject>(data);
-                    Data d = d_root.data;
-
-                    try
+                    if (jsons[i].Contains("button"))
                     {
-                        List<Data_Button> b = d.buttons;
+                        Root_Button root = JsonConvert.DeserializeObject<Root_Button>(jsons[i]);
 
-                        for (int i = 0; i < b.Count; i++)
-                            this.buttons[i].State = Convert.ToBoolean(b[i].state);
-
-
-                        List<Data_Potentiometer> p = d.potentiometers;
-
-                        for (int i = 0; i < p.Count; i++)
-                            this.potentiometers[i].Value = p[i].value;
-
-                        List<Data_Mpu> m = d.mpus;
-
-                        for (int i = 0; i < m.Count; i++)
+                        for (int j = 0; j < this.buttons.Count; j++)
                         {
-                            this.mpus[i].Accel_Values = new int[3] { m[i].accel.x, m[i].accel.y, m[i].accel.z };
-                            this.mpus[i].Gyro_Values = new int[3] { m[i].gyro.x, m[i].gyro.y, m[i].gyro.z };
-                            this.mpus[i].Angle_Values = new double[3] { m[i].angle.x, m[i].angle.y, m[i].angle.z };
+                            if (this.buttons[j].Name == root.button.name)
+                                this.buttons[j].State = Convert.ToBoolean(root.button.state);
                         }
-
-                        /*{
-                        "name": "rgb_led_0",
-                        "pin" : "D3,D4,D5",
-                        "mode" : "BLINKING",
-                        "value" : {
-                        "r": 0,
-                        "g" : 1023,
-                        "b" : 0
-                        }*/
-
                     }
-                    catch (Exception e)
+                    else if (jsons[i].Contains("potentiometer"))
                     {
-                        Console.WriteLine("Excpetion: " + e.Data);
+                        Root_Potentiometer root = JsonConvert.DeserializeObject<Root_Potentiometer>(jsons[i]);
+
+                        for (int j = 0; j < this.potentiometers.Count; j++)
+                        {
+                            if (this.potentiometers[j].Name == root.potentiometer.name)
+                                this.potentiometers[j].Value = root.potentiometer.value;
+                        }
                     }
+                    else if (jsons[i].Contains("mpu"))
+                    {
+                        Root_Mpu root = JsonConvert.DeserializeObject<Root_Mpu>(jsons[i]);
+
+                        for (int j = 0; j < this.mpus.Count; j++)
+                        {
+                            if (this.mpus[j].Name == root.mpu.name)
+                            {
+                                this.mpus[j].Accel_Values = new int[3] { root.mpu.accel.x, root.mpu.accel.y, root.mpu.accel.z };
+                                this.mpus[j].Gyro_Values = new int[3] { root.mpu.gyro.x, root.mpu.gyro.y, root.mpu.gyro.z };
+                                this.mpus[j].Angle_Values = new double[3] { root.mpu.angle.x, root.mpu.angle.y, root.mpu.angle.z };
+                            }
+                        }
+                    }
+                    //TODO: FAZER RGB_LED
 
                 }
                 catch (Exception e)
@@ -214,6 +211,7 @@ namespace GearSDK_CSharpDLL
                     Console.WriteLine("Excpetion: " + e.Data);
                 }
             }
+
         }
 
         #endregion

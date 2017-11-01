@@ -1,6 +1,8 @@
 #include "declarations.h"
 #include "Gear_Server.h"
 
+void ReceivedMessage(JsonObjectType type, JsonObject& root);
+
 void InitOjbects()
 {
     g_mpu.init();
@@ -51,7 +53,27 @@ void SendObjects()
 
     if(message != ""){
         webSocket.sendTXT(0, message);
-        Serial.println(message);
+    }
+}
+
+void ReceivedMessage(JsonObjectType type, JsonObject& root)
+{
+    switch(type)   
+    {
+        case JsonObjectType::RGB_LED:
+        {
+            int v1 = (root)["rgb_led"]["value"]["r"];
+            int v2 = (root)["rgb_led"]["value"]["g"];
+            int v3 = (root)["rgb_led"]["value"]["b"];
+
+            int mode = (root)["rgb_led"]["mode"];
+
+            rgbLed.SetColor(v1,v2,v3);
+            rgbLed.SetMode((LedMode)mode, 800, 200);
+            break;
+        }
+        default:
+            break;
     }
 }
 
@@ -129,21 +151,20 @@ void webSocketEvent(uint8_t num, int type, uint8_t* payload, size_t length)
                 headerReceivedByClient = true;
             }
             else if(payload[0] == '{') { //JSON
-
-                StaticJsonBuffer<200> jsonBuffer;
+               
+                StaticJsonBuffer<350> jsonBuffer;
                 JsonObject& root = jsonBuffer.parseObject(payload);
+    
+                String sJson = "";
+                root.printTo(sJson);
 
-                String name = root["name"].as<String>();
-                int mode = root["mode"];
+                int pntIndex = sJson.indexOf(":");
 
-                if(name.indexOf("rgb_led") >= 0)
+                if(pntIndex > 0)
                 {
-                    int v1 = root["value"]["r"];
-                    int v2 = root["value"]["g"];
-                    int v3 = root["value"]["b"];
-
-                    rgbLed.SetColor(v1,v2,v3);
-                    rgbLed.SetMode((LedMode)mode, 800, 200);
+                    String jsonType = sJson.substring(2, pntIndex-1);  
+                    if(jsonType == "rgb_led")  
+                        ReceivedMessage(JsonObjectType::RGB_LED, root);
                 }
             }
             break;

@@ -27,8 +27,12 @@ namespace GearSDK_CSharpDLL
         void HandShakeWithServer()
         {
             while (!wrapper.HeaderSetted)
-                wrapper.Init(connection.ReceivedMessage());
-            
+            {
+                string message = connection.ReceivedMessage();
+
+                if(!string.IsNullOrEmpty(message))
+                    wrapper.Init(connection.ReceivedMessage());
+            }
             if (!handShakeDone)
             {
                 connection.SendMessage("@ Hand Shake");
@@ -78,24 +82,7 @@ namespace GearSDK_CSharpDLL
                     if (!handShakeDone)
                         HandShakeWithServer(); //Loop until handshake done!
 
-                    //If the number of connection messages grether then localCounter, it's a new message
-                    if (connection.MessageCounter > atualNumberOfMessages)
-                    {
-                        atualNumberOfMessages = connection.MessageCounter;
-
-                        wrapper.UpdateObjects(connection.ReceivedMessage());
-                        canUpdateObjects = true;
-                    }
-                    else
-                        canUpdateObjects = false;
-
-                    //forced disconnetion
-                    //if (atualNumberOfMessages > 40)
-                    //{
-                    //	cout << "Disconnecting..." << endl << endl;
-                    //	cppConnection.Disconnect();
-                    //	break;
-                    //}
+                    wrapper.UpdateObjects(connection.ReceivedMessage());    
                 }
             }
             catch (Exception e)

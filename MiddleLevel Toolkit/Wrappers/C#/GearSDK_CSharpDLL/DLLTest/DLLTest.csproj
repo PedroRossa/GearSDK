@@ -4,13 +4,12 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{3D5E4C52-9230-4B8D-AF73-A9C8B77E424C}</ProjectGuid>
+    <ProjectGuid>{958A4103-B6CB-4510-817D-48FC1540EF70}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>Console_Sample</RootNamespace>
-    <AssemblyName>Console_Sample</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <RootNamespace>DLLTest</RootNamespace>
+    <AssemblyName>DLLTest</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -32,32 +31,32 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="GearSDK_CSharpDLL, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\DLLs\GearSDK_CSharpDLL.dll</HintPath>
-    </Reference>
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\DLLs\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\..\..\..\Examples\C#\Console_Sample\DLLs\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
-    <Reference Include="websocket-sharp, Version=1.0.2.41138, Culture=neutral, PublicKeyToken=5660b08a1845a91e, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\DLLs\websocket-sharp.dll</HintPath>
+    <Reference Include="websocket-sharp">
+      <HintPath>..\..\..\..\Examples\C#\Console_Sample\DLLs\websocket-sharp.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GearSDK.cs" />
+    <Compile Include="GearSDK_CSharp\csharp_Client.cs" />
+    <Compile Include="GearSDK_CSharp\csharp_Connection.cs" />
+    <Compile Include="GearSDK_CSharp\csharp_Wrapper.cs" />
+    <Compile Include="GearSDK_CSharp\Gear_Objects\Gear_Button_csharp.cs" />
+    <Compile Include="GearSDK_CSharp\Gear_Objects\Gear_MPU6050_csharp.cs" />
+    <Compile Include="GearSDK_CSharp\Gear_Objects\Gear_Potentiometer_csharp.cs" />
+    <Compile Include="GearSDK_CSharp\Gear_Objects\Gear_RGBLed_csharp.cs" />
+    <Compile Include="GearSDK_CSharp\Helper.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
