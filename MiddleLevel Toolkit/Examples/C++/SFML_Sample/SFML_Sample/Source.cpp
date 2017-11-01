@@ -33,20 +33,21 @@ void Update_GearObjects()
 	
 	if (btnState)
 	{
-		//client.wrapper.GetRGBLed(0)->SetRGB_Value((int)(pot * 1023), (int)(pot * 0), (int)(pot * 1023));
-		//client.wrapper.GetRGBLed(0)->SetMode(LedMode::STATIC);
-		////wrapper.GetRGBLed(0)->SetMode(LedMode::BLINKING, 500, 100);
-		//string s = client.wrapper.GetRGBLed(0)->UpdatedJson();
-		//client.connection.SendMessage(s);
+		client.wrapper.GetRGBLed(0)->SetRGB_Value((int)(pot * 1023), (int)(pot * 0), (int)(pot * 1023));
+		client.wrapper.GetRGBLed(0)->SetMode(LedMode::STATIC);
+		//wrapper.GetRGBLed(0)->SetMode(LedMode::BLINKING, 500, 100);
+		string s = client.wrapper.GetRGBLed(0)->UpdatedJson();
+		client.connection.SendMessage(s);
 	}
 	else
 	{
-		//client.wrapper.GetRGBLed(0)->SetRGB_Value((int)(pot * 0), (int)(pot * 1023), (int)(pot * 1023));
-		//client.wrapper.GetRGBLed(0)->SetMode(LedMode::STATIC);
-		//
-		//string s = client.wrapper.GetRGBLed(0)->UpdatedJson();
-		//client.connection.SendMessage(s);
+		client.wrapper.GetRGBLed(0)->SetRGB_Value((int)(pot * 0), (int)(pot * 1023), (int)(pot * 1023));
+		client.wrapper.GetRGBLed(0)->SetMode(LedMode::STATIC);
+		
+		string s = client.wrapper.GetRGBLed(0)->UpdatedJson();
+		client.connection.SendMessage(s);
 	}
+	//TODO: need a timer here!
 }
 
 void Update_SFLMObjects()

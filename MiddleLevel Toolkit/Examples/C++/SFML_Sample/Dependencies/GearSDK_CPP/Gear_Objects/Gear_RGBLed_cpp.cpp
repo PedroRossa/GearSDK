@@ -88,11 +88,11 @@ void Gear_RGBLed_cpp::SetRGB_Value(int r, int g, int b)
 
 string Gear_RGBLed_cpp::UpdatedJson()
 {
-	string val = "{\"name\":\"" + this->name + "\",";
+	string val = "{\"rgb_led\":{\"name\":\"" + this->name + "\",";
 	val += "\"pin\":\"" + this->pin_r + "," + this->pin_g + "," + this->pin_b + "\",";
 	val += "\"mode\":" + to_string(this->mode) + ",";
 	val += "\"value\": {\"r\":" + to_string(this->r_value) + ", \"g\":" + to_string(this->g_value) + ", \"b\":" + to_string(this->b_value);
-	val += "}}";
+	val += "}}}";
 
 	return val;
 }
