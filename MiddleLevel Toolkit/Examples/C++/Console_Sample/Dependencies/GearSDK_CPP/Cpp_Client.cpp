@@ -22,7 +22,6 @@ Cpp_Client::~Cpp_Client()
 
 int Cpp_Client::GetAtualNumberOfMessages() { return this->atualNumberOfMessages; }
 bool Cpp_Client::HandShakeIsDone() { return this->handShakeDone; }
-bool Cpp_Client::CanUpdateObjects() { return this->canUpdateObjects; }
 
 void Cpp_Client::SetAtualNumberOfMessages(int value) { this->atualNumberOfMessages = value; }
 void Cpp_Client::HandShakeIsDone(bool handShakeIsDone) { this->handShakeDone = handShakeDone; }

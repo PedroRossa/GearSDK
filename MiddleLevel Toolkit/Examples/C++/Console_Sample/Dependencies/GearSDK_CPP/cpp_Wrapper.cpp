@@ -301,7 +301,7 @@ void cpp_Wrapper::UpdateMpu(string data)
 
 #pragma endregion
 
-#pragma region Getters and Setters
+#pragma region Gets and Sets
 
 bool cpp_Wrapper::HeaderSetted() { return this->headerSetted; }
 
@@ -312,9 +312,6 @@ Gear_Button_cpp* cpp_Wrapper::GetButton(int id) { return this->buttons->at(id); 
 Gear_Potentiometer_cpp* cpp_Wrapper::GetPotentiometer(int id) { return this->potentiometers->at(id); }
 Gear_RGBLed_cpp* cpp_Wrapper::GetRGBLed(int id) { return this->rgbLeds->at(id); }
 Gear_MPU6050_cpp* cpp_Wrapper::GetMPU6050(int id) { return this->mpus->at(id); }
-
-
-void cpp_Wrapper::SetRGBLed(int id, Gear_RGBLed_cpp* newObj) { this->rgbLeds->at(id) = newObj; }
 
 #pragma endregion
 

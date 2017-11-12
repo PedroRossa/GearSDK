@@ -1,0 +1,104 @@
+Updating the C++ Wrapper
+
+1 - Create a Gear Object following the TEMPLATE LINK;
+2 - Put the .h and .cpp on Gear_Objects Folder
+3 - update the samples Gear_Objects with the same file
+
+Now, gonna make changes to wrapper recognize the new Gear Object
+
+ On cpp_wrapper.h 
+	
+	1 - include the .h file in top of the file
+		#include "Gear_Objects\Gear_MYOBJECT_cpp.h"
+	
+	2 - On #region Attributes, create a pointer vector of pointers of the new object	
+		vector<Gear_MYOBJECT_cpp*>* myObjects;
+		
+	3 - On #region Private Methods, create the headers to create and update the object
+		void CreateMyObject(string data);
+		void UpdateMyObject(string data);
+	
+	4 - On #region Gets and Sets, create the header to got the new object by id
+		Gear_MYOBJECT_cpp* GetMyObject(int id);
+	
+
+ On cpp_wrapper.cpp
+ 
+	1 - on #region Constructors, initialize the pointer vector
+		this->myObjects = new vector<Gear_MYOBJECT_cpp*>();
+		
+	2 - on #Private Methods, create the implementation of the "CreateMyObject" and "UpdateMyObject".
+		
+		void cpp_Wrapper::CreateMyObject(string data)
+		{
+			this->jsonValue = StringToJson(data);
+
+			if (this->jsonValue == NULL)
+				return;
+
+			try
+			{
+				//use the same tag of the lowLevel object
+				auto jsonMyObject = this->jsonValue.at(U("<myObject_TAG>"));
+
+				string name = utility::conversions::to_utf8string(jsonMyObject.at(U("name")).as_string());
+				string pin = utility::conversions::to_utf8string(jsonMyObject.at(U("pin")).as_string());
+				int value = jsonMyObject.at(U("value")).as_integer();
+
+				Gear_MYOBJECT_cpp* myObj = new Gear_MYOBJECT_cpp(this->myObjects->size(), name, pin, value);
+
+				this->myObjects->push_back(myObj);
+			}
+			catch (const std::exception& e)
+			{
+				cout << "Exception: " << e.what() << endl;
+			}
+		}
+		
+		
+		void cpp_Wrapper::UpdateMyObject(string data)
+		{
+			this->jsonValue = StringToJson(data);
+		
+			if (this->jsonValue == NULL)
+				return;
+			
+			try
+			{
+				auto jsonMyObject = this->jsonValue.at(U("<myObject_TAG>"));
+		
+				string objName = utility::conversions::to_utf8string(jsonMyObject.at(U("name")).as_string());
+				int value = jsonMyObject.at(U("value")).as_integer();
+		
+				for (size_t i = 0; i < this->myObjects->size(); i++)
+				{
+					string name = this->myObjects->at(i)->GetName();
+					if (name == objName)
+					{
+						this->myObjects->at(i)->SetState((bool)state);
+					}
+				}
+			}
+			catch (const std::exception& e)
+			{
+				cout << "Exception: " << e.what() << endl;
+			}
+		}
+		
+		3 - On #region Gets and Sets, create the implementation of the "GetMyObject"
+			Gear_MYOBJECT_cpp* cpp_Wrapper::GetMyObject(int id) { return this->myObjects->at(id); }
+			
+		4 - On #region Public Methods, update the methods "Init" and "UpdateObjects" with your new objetct
+			- INIT METHOD
+				Inside of the for "(int i = 1; i < jsons.size(); i++)", put this in the end of if/elses:
+					
+					else if (jsons[i].find("<myObject_TAG>") != std::string::npos)
+						CreateMyObject(jsons[i]);
+			
+			- UPDATE OBJECTS METHOD
+				Inside of the for "(int i = 1; i < jsons.size(); i++)", put this in the end of if/elses:
+					
+					else if (jsons[i].find("<myObject_TAG>") != std::string::npos)
+						UpdateMyObject(jsons[i]);
+			
+		

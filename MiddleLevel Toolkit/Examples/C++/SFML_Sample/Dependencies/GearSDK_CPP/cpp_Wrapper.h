@@ -54,7 +54,7 @@ public:
 
 #pragma endregion
 
-#pragma region Getters and Setters
+#pragma region Gets and Sets
 
 	bool HeaderSetted();
 
@@ -65,8 +65,6 @@ public:
 	Gear_Potentiometer_cpp* GetPotentiometer(int id);
 	Gear_RGBLed_cpp* GetRGBLed(int id);
 	Gear_MPU6050_cpp* GetMPU6050(int id);
-
-	void SetRGBLed(int id, Gear_RGBLed_cpp* newObj);
 
 #pragma endregion
 

@@ -15,7 +15,6 @@ private:
 
 	int atualNumberOfMessages = 0;
 	bool handShakeDone = false;
-	bool canUpdateObjects = false;
 
 #pragma endregion
 
@@ -46,7 +45,6 @@ public:
 
 	int GetAtualNumberOfMessages();
 	bool HandShakeIsDone();
-	bool CanUpdateObjects();
 
 	void SetAtualNumberOfMessages(int value);
 	void HandShakeIsDone(bool handShakeIsDone);

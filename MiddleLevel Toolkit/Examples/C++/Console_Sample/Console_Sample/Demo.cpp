@@ -75,9 +75,6 @@ int main()
 	{
 		client.Update();
 		UpdateObjects();
-		//TODO: SOLVE PROBLEM WITH MPU
-		//TODO: UPDATE ALL C++ SAMPLES WITH THIS FILES
-		//TODO: UPDATE C# DLL AND SAMPLES
 	}
 
 	return 0;
