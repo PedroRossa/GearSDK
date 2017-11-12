@@ -1,0 +1,75 @@
+Updating the C# Wrapper
+
+1 - Create a Gear Object following the TEMPLATE LINK;
+2 - Put the .cs on Gear_Objects Folder
+
+Now, gonna make changes to wrapper recognize the new Gear Object
+
+ On csharp_wrapper.cs 
+		
+	1 - On #region Attributes, create a List of the new object	
+		List<Gear_Objects.Gear_<MY_OBJECT>_csharp myObjects;
+		
+	2 - On #region Constructors, initialize the list
+		this.myObjects = new List<Gear_Objects.Gear_<MY_OBJECT>_csharp>();
+		
+	3 - On #region Gets and Sets, create the header to got the new object by id
+		public List<Gear_<MY_OBJECT>_csharp> MyObjects { get => myObjects; }
+	
+	4 - On #region Private Methods, create methods to create and update the object
+		
+		- CREATE OBJECT
+        Gear_<MY_OBJECT>_csharp CreateMyObject(Json.<MY_OBJECT>.Header jData)
+        {
+            string name = jData.name;
+            string pin = jData.pin;
+            int value = jData.value;
+
+            Gear_<MY_OBJECT>_csharp myObj = new Gear_<MY_OBJECT>_csharp(this.MyObjects.Count, name, pin, value);
+
+            this.myObjects.Add(myObj);
+            return myObj;
+        }
+		
+		- UPDATE OBJECT
+        bool UpdateMyObject(Json.<MY_OBJECT>.Data jData)
+        {
+            string name = jData.name;
+            int value = jData.value;
+            for (int i = 0; i < this.myObjects.Count; i++)
+            {
+                if (this.myObjects[i].Name == name)
+                {
+                    this.myObjects[i].Value = value;
+                    return true;
+                }
+            }
+            return false;
+        }
+
+	5 - On #region Pulbic Methods update the methods "Init" and "UpdateObjects" with your new objetct
+			- INIT METHOD
+				Inside of the for "for(int i = 0; i < jsonHeaders.Length; i++)", put this in the end of if/elses:
+					
+					//-------- MY OBJECT ------------
+					//The same tag value used on lowLevel
+                    else if (jsonHeaders[i].Contains("<MY_OBJECT_TAG>"))
+                    {
+                        Json.<MY_OBJECT>.Root_Header rh = JsonConvert.DeserializeObject<Json.<MY_OBJECT>.Root_Header>(jsonHeaders[i]);
+                        CreateMyObject(rh.myObject);
+                    }
+			
+			- UPDATE OBJECTS METHOD
+				Inside of the for "for(int i = 0; i < jsonDatas.Length; i++)", put this in the end of if/elses:
+					
+                    //-------- MY OBJECT ------------
+                    if (jsonDatas[i].Contains("<MY_OBJECT_TAG>"))
+                    {
+                        Json.<MY_OBJECT>.Root_Data rd = JsonConvert.DeserializeObject<Json.<MY_OBJECT>.Root_Data>(jsonDatas[i]);
+                        UpdateMyObject(rd.myObject);
+                    }
+
+	
+ 3 - Rebuild the solution on Realase, generating a new DLL
+ 4 - Update the DLL on sample folders
+		

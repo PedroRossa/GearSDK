@@ -160,12 +160,7 @@ namespace GearSDK_CSharpDLL
         public List<Gear_Potentiometer_csharp> Potentiometers { get => potentiometers; }
         public List<Gear_RGBLed_csharp> RgbLeds { get => rgbLeds; }
         public List<Gear_MPU6050_csharp> Mpus { get => mpus; }
-
-        void SetRGBLed(int id, Gear_Objects.Gear_RGBLed_csharp led)
-        {
-            this.rgbLeds[id] = led;
-        }
-
+        
         #endregion
 
         #region Public Methods
