@@ -1,0 +1,7 @@
+If you want to help to improve the GearSDK, you can create your own objects, and make a pull request;
+To do that, you just need to follow this steps:
+
+1 - use the LowLevel Object Template LINK, to create a class of the objects
+2 - use the Middle Level Template LINK, to create the wrappers of the object
+
+If you want, you can use your objects on a sketch, you just need to follow the steps of the file: how to add object on sketch

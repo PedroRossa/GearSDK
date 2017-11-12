@@ -1,26 +1,6 @@
 #include "declarations.h"
 #include "Gear_Server.h"
 
-String MountJSONHeader()
-{
-    jsonHeader = "{\"header\":";
-    jsonHeader = jsonHeader + "{\"buttons\":[";
-    jsonHeader = jsonHeader + button_0->GetHeader() + "],";
-
-    jsonHeader = jsonHeader + "\"potentiometers\":[";
-    jsonHeader = jsonHeader + pot->GetHeader() + "],";
-
-    jsonHeader = jsonHeader + "\"rgb_leds\":[";
-    jsonHeader = jsonHeader + rgbLed->GetHeader() + "],";
-
-    jsonHeader = jsonHeader + "\"mpus\":[";
-    jsonHeader = jsonHeader + g_mpu->GetHeader() + "]";
-    
-    jsonHeader = jsonHeader + "}}";
-    
-    return jsonHeader;
-}
-
 void CheckReceivedMessages(uint8_t* payload)
 {
     canReceiveMessage = false;

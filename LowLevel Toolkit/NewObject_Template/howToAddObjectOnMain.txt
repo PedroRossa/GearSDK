@@ -1,0 +1,9 @@
+To add an object on your script, just follow this steps:
+
+1 - On "declarations.h" create a new pointer of your object:
+Gear_<MY_OBJECT>* my_obj = new MY_OBJECT("my_obj", 6);
+
+2 - On - void setup() - use the gearManager to add an obejct:
+	gearManager->add(my_Object);
+	
+3 - If the object is a sensor, call the respective update metod on - void loop() -;
