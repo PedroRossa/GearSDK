@@ -83,7 +83,7 @@ bool cpp_Connection::Connect(string initialMessage)
 
 			this->messageCounter++;
 		});
-
+		
 		return true;
 	}
 	catch (const std::exception&)
@@ -114,15 +114,16 @@ bool cpp_Connection::SendMessage(string message)
 
 	try
 	{
-		wsClient.send(wsOutMessage).then([]()
+		wsClient.send(wsOutMessage).then([this]()
 		{
-			//Message sent succefuly!
-
+			/* Successfully sent the message. */
 		}).wait();
+
 		return true;
 	}
-	catch (const std::exception&)
+	catch (const std::exception& e)
 	{
+		cout << e.what() << endl;
 		return false;
 	}
 }	
@@ -132,6 +133,11 @@ string cpp_Connection::ReceivedMessage()
 	return receivedMessage;
 }
 
+void cpp_Connection::ClearMessageBuffer()
+{
+	this->receivedMessage = "";
+}
+
 bool cpp_Connection::StablishConnection()
 {
 	//Connect to WebServer
@@ -139,7 +145,9 @@ bool cpp_Connection::StablishConnection()
 	{
 		//Check for succesful connection
 		if (this->Connect())
+		{
 			this->SendMessage("Server we are soooo connected!!! <3 ");
+		}
 		else
 		{
 			cout << "some problem with connection occours!" << endl << endl;

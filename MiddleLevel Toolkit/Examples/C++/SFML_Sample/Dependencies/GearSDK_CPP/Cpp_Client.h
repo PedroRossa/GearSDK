@@ -1,6 +1,9 @@
 #ifndef Cpp_Client_H
 #define Cpp_Client_H
 
+#include <chrono>
+#include <thread>
+
 #include "cpp_Connection.h"
 #include "cpp_Wrapper.h"
 

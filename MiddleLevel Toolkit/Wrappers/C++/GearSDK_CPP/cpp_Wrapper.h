@@ -33,10 +33,10 @@ class cpp_Wrapper
 
 #pragma region Private Methods
 
-	Gear_Button_cpp* CreateButton(json::value values);
-	Gear_Potentiometer_cpp* CreatePotentiometer(json::value values);
-	Gear_RGBLed_cpp* CreateRGBLed(json::value values);
-	Gear_MPU6050_cpp* CreateMPU6050(json::value values);
+	void CreateButton(string data);
+	void CreatePotentiometer(string data);
+	void CreateRGBLed(string data);
+	void CreateMpu(string data);
 
 	void UpdateButton(string data);
 	void UpdatePotentiometer(string data);

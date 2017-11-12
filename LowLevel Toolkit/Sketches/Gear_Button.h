@@ -47,9 +47,9 @@ public:
 
 #pragma region Public Methods
 
-    String GetHeader();
     void init();
     String updatedData();
+    void receivedMessage(JsonObject& root, String type);
 
 #pragma endregion
 

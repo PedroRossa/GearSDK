@@ -42,12 +42,12 @@ Gear_Button::~Gear_Button(){}
 
 String Gear_Button::headerJson()
 {
-    String hJson = "{";
+    String hJson = "{\"button\":{";
     hJson = hJson + "\"name\"" + ":" + "\"" + this->name + "\",";
     hJson = hJson + "\"pin\"" + ":" + "\"" +  this->pin + "\",";
     hJson = hJson + "\"state\"" + ":" + this->state + ",";
     hJson = hJson + "\"type\"" + ":" + this->type;
-    hJson = hJson + "}";
+    hJson = hJson + "}}";
 
     return hJson;
 }
@@ -56,8 +56,6 @@ String Gear_Button::headerJson()
 
 #pragma region Public Methods
  
-String Gear_Button::GetHeader(){ return this->header; }
-
 void Gear_Button::init()
 {
     pinMode(this->pin, INPUT);
@@ -82,6 +80,11 @@ String Gear_Button::updatedData()
     {
         return "";
     }
+}
+
+void Gear_Button::receivedMessage(JsonObject& root, String type)
+{
+    //This object don't receive messages from clients
 }
 
 #pragma endregion

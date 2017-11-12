@@ -24,6 +24,8 @@ private:
 	int g_value;
 	int b_value;
 
+	string lastJsonValue;
+
 #pragma endregion
 
 public:

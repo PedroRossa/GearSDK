@@ -98,7 +98,7 @@ namespace GearSDK_CSharpDLL
         {
             try
             {
-                webSocketClient.SendAsync(message, null);
+                webSocketClient.Send(message);
             }
             catch (Exception e)
             {

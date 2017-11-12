@@ -39,9 +39,9 @@ public:
 
 #pragma region Public Attributes
 
-    String GetHeader();
     void init();
     String updatedData();
+    void receivedMessage(JsonObject& root, String type);
 
 #pragma endregion
 

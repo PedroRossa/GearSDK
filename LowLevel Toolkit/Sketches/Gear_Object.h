@@ -21,7 +21,7 @@ protected:
 
 #pragma endregion
 
-#pragma region Private Methods
+#pragma region Protected Methods
 
     virtual String headerJson() = 0;
 
@@ -40,15 +40,18 @@ public:
 
     uint GetID();
     String GetName();
+    String GetHeader();
     JsonObject* GetJson();
 
 #pragma endregion
 
 #pragma region Public Methods
 
-    virtual String GetHeader() = 0;
     virtual void init() = 0;
     virtual String updatedData() = 0;
+    virtual void receivedMessage(JsonObject& root, String type) = 0;
+
+    static String getObjectTypeByJson(JsonObject& root);
 
 #pragma endregion
 

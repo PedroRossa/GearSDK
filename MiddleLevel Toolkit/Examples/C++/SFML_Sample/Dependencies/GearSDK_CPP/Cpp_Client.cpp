@@ -18,7 +18,7 @@ Cpp_Client::~Cpp_Client()
 
 #pragma endregion
 
-#pragma region Getters and Setters
+#pragma region Get and Set
 
 int Cpp_Client::GetAtualNumberOfMessages() { return this->atualNumberOfMessages; }
 bool Cpp_Client::HandShakeIsDone() { return this->handShakeDone; }
@@ -81,8 +81,9 @@ void Cpp_Client::Update()
 		{
 			if (!handShakeDone)
 				HandShakeWithServer(); //Loop until handshake done!
-						
-			wrapper.UpdateObjects(connection.ReceivedMessage());
+
+				wrapper.UpdateObjects(connection.ReceivedMessage());
+				//connection.ClearMessageBuffer();
 		}
 	}
 	catch (const std::exception& e)

@@ -88,13 +88,13 @@ void Gear_RGBLed::SetColor(int r, int g, int b)
 
 String Gear_RGBLed::headerJson()
 {
-    String hJson = "{";
+    String hJson = "{\"rgb_led\":{";
     hJson = hJson + "\"name\"" + ":" + "\"" + this->name + "\",";
     hJson = hJson + "\"pin\"" + ":" +  "\"" +  this->r_pin + "," + this->g_pin + "," + this->b_pin + "\",";
     hJson = hJson + "\"mode\"" + ":" + this->mode + ",";
     hJson = hJson + "\"value\"" + ":";
     hJson = hJson + "{\"r\":0, \"g\":1023, \"b\":0}";
-    hJson = hJson + "}";
+    hJson = hJson + "}}";
 
     return hJson;
 }
@@ -164,8 +164,6 @@ void Gear_RGBLed::fadingMode()
 
 #pragma region Public Attributes
 
-String Gear_RGBLed::GetHeader(){ return this->header; }
-
 void Gear_RGBLed::init()
 {
     pinMode(this->r_pin, OUTPUT);
@@ -173,35 +171,6 @@ void Gear_RGBLed::init()
     pinMode(this->b_pin, OUTPUT);
 
     (*this->json)["rgb_led"]["name"] = GetName();
-}
-
-void Gear_RGBLed::update()
-{
-    switch (this->mode)
-    {
-        case LedMode::STATIC:
-        
-        break;
-
-        case LedMode::BLINK:
-            this->blinkMode();
-        break;
-
-        case LedMode::BLINKING:
-            this->blinkingMode();
-        break;
-
-        case LedMode::FADE:
-            this->fadeMode();
-        break;
-
-        case LedMode::FADING:
-            this->fadingMode();
-        break;
-        default:
-        break;
-    } 
-    this->SendState();
 }
 
 String Gear_RGBLed::updatedData()
@@ -233,6 +202,51 @@ String Gear_RGBLed::updatedData()
     {
         return "";
     }
+}
+
+void Gear_RGBLed::receivedMessage(JsonObject& root, String type)
+{
+    if(type == "rgb_led")  
+    {
+        int v1 = (root)["rgb_led"]["value"]["r"];
+        int v2 = (root)["rgb_led"]["value"]["g"];
+        int v3 = (root)["rgb_led"]["value"]["b"];
+
+        int mode = (root)["rgb_led"]["mode"];
+
+        SetColor(v1,v2,v3);
+        SetMode((LedMode)mode, 800, 200);
+    }   
+}
+
+
+void Gear_RGBLed::update()
+{
+    switch (this->mode)
+    {
+        case LedMode::STATIC:
+        
+        break;
+
+        case LedMode::BLINK:
+            this->blinkMode();
+        break;
+
+        case LedMode::BLINKING:
+            this->blinkingMode();
+        break;
+
+        case LedMode::FADE:
+            this->fadeMode();
+        break;
+
+        case LedMode::FADING:
+            this->fadingMode();
+        break;
+        default:
+        break;
+    } 
+    this->SendState();
 }
 
 #pragma endregion

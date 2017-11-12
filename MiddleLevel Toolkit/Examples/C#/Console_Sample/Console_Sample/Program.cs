@@ -56,7 +56,8 @@ namespace Console_Sample
                     //wrapper.GetRGBLed(0)->SetMode(LedMode::BLINKING, 500, 100);
                     string s = client.wrapper.RgbLeds[0].UpdatedJson();
 
-                    client.connection.SendMessage(s);
+                    if (!string.IsNullOrEmpty(s))
+                        client.connection.SendMessage(s);
 
                 }
                 else
@@ -65,7 +66,9 @@ namespace Console_Sample
                     client.wrapper.RgbLeds[0].SetMode(Helper.LedMode.STATIC);
 
                     string s = client.wrapper.RgbLeds[0].UpdatedJson();
-                    client.connection.SendMessage(s);
+
+                    if(!string.IsNullOrEmpty(s))
+                        client.connection.SendMessage(s);
                 }
 
                 System.Threading.Thread.Sleep(50);

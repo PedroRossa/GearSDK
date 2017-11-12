@@ -94,6 +94,15 @@ string Gear_RGBLed_cpp::UpdatedJson()
 	val += "\"value\": {\"r\":" + to_string(this->r_value) + ", \"g\":" + to_string(this->g_value) + ", \"b\":" + to_string(this->b_value);
 	val += "}}}";
 
+	if (lastJsonValue != val)
+	{
+		lastJsonValue = val;
+	}
+	else
+	{
+		val = "";
+	}
+
 	return val;
 }
 

@@ -46,7 +46,7 @@ public:
 
 #pragma endregion
 
-#pragma region Getters and Setters
+#pragma region Gets and Sets
 
 	string GetIP();
 	int GetPort();
@@ -70,6 +70,8 @@ public:
 	bool SendMessage(string message);
 
 	string ReceivedMessage();
+
+	void ClearMessageBuffer();
 
 	bool StablishConnection();
 

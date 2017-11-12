@@ -81,10 +81,10 @@ public:
     void readRawMPU();
     void CalculateAngles();
 
-    String GetHeader();
     void init();
     String updatedData();
-
+    void receivedMessage(JsonObject& root, String type);
+    
 #pragma endregion
 
 };

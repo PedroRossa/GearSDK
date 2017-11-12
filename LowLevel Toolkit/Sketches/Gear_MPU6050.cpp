@@ -45,16 +45,16 @@ double Gear_MPU6050::GetAngleZ(){ return this->angle[2]; }
     
 String Gear_MPU6050::headerJson()
 {
-    String hJson = "{";
+    String hJson = "{\"mpu\":{";
     hJson = hJson + "\"name\"" + ":" + "\"" + this->name + "\",";
     hJson = hJson + "\"pins\"" + ":" + "\"" + this->sdaPin + "," + this->sclPin+ "\",";
     hJson = hJson + "\"accel\"" + ":";
-    hJson = hJson + "{" + "\"x\": 0, \"y\": 0, \"z\": 0 },";
+    hJson = hJson + "{" + "\"x\": 100, \"y\": 100, \"z\": 100 },";
     hJson = hJson + "\"gyro\"" + ":";
-    hJson = hJson + "{" + "\"x\": 0, \"y\": 0, \"z\": 0 },";
+    hJson = hJson + "{" + "\"x\": 100, \"y\": 100, \"z\": 100 },";
     hJson = hJson + "\"angle\"" + ":";
-    hJson = hJson + "{" + "\"x\": 0, \"y\": 0, \"z\": 0 }";
-    hJson = hJson + "}";
+    hJson = hJson + "{" + "\"x\": 100, \"y\": 100, \"z\": 100 }";
+    hJson = hJson + "}}";
 
     return hJson;
 }
@@ -233,8 +233,6 @@ void Gear_MPU6050::CalculateAngles()
     angle[2] = RAD_TO_DEG * (atan2(-yAng, -xAng)+PI);
 }
 
-String Gear_MPU6050::GetHeader(){ return this->header; }
-
 void Gear_MPU6050::init()
 {
     initI2C();
@@ -300,6 +298,11 @@ String Gear_MPU6050::updatedData()
     {
         return "";
     }
+}
+
+void Gear_MPU6050::receivedMessage(JsonObject& root, String type)
+{
+    //This object don't receive messages from clients
 }
 
 #pragma endregion

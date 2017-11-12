@@ -44,5 +44,33 @@ namespace GearSDK_CSharpDLL.Gear_Objects
         public int Type { get => type; }
 
         #endregion
+
+    }
+}
+
+namespace Json.Button
+{
+    public class Header
+    {
+        public string name { get; set; }
+        public string pin { get; set; }
+        public int state { get; set; }
+        public int type { get; set; }
+    }
+
+    public class Root_Header
+    {
+        public Header button { get; set; }
+    }
+
+    public class Data
+    {
+        public string name { get; set; }
+        public int state { get; set; }
+    }
+
+    public class Root_Data
+    {
+        public Data button { get; set; }
     }
 }

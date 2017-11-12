@@ -41,26 +41,33 @@ void UpdateObjects()
 
 	if (buttonState)
 	{
-		//client.wrapper.GetRGBLed(0)->SetRGB_Value((int)(intensity * 1023), (int)(intensity * 0), (int)(intensity * 1023));
-		//client.wrapper.GetRGBLed(0)->SetMode(LedMode::STATIC);
+		client.wrapper.GetRGBLed(0)->SetRGB_Value((int)(intensity * 1023), (int)(intensity * 0), (int)(intensity * 1023));
+		client.wrapper.GetRGBLed(0)->SetMode(LedMode::STATIC);
 		
-		//string s = client.wrapper.GetRGBLed(0)->UpdatedJson();
-		//client.connection.SendMessage(s);
+		string s = client.wrapper.GetRGBLed(0)->UpdatedJson();
 
+		if (s != "")
+		{
+			client.connection.SendMessage(s);
+		}
 	}
 	else
 	{
-		//client.wrapper.GetRGBLed(0)->SetRGB_Value((int)(intensity * 0), (int)(intensity * 1023), (int)(intensity * 1023));
-		//client.wrapper.GetRGBLed(0)->SetMode(LedMode::STATIC);
+		client.wrapper.GetRGBLed(0)->SetRGB_Value((int)(intensity * 0), (int)(intensity * 1023), (int)(intensity * 1023));
+		client.wrapper.GetRGBLed(0)->SetMode(LedMode::STATIC);
 		
-		//string s = client.wrapper.GetRGBLed(0)->UpdatedJson();
-		//client.connection.SendMessage(s);
+		string s = client.wrapper.GetRGBLed(0)->UpdatedJson();
+		
+		if (s != "")
+		{
+			client.connection.SendMessage(s);
+		}
 	}
 }
 
 int main()
 {
-	client = Cpp_Client("192.168.15.10", 81);
+	client = Cpp_Client("192.168.15.4", 81);
 
 	client.Init();
 

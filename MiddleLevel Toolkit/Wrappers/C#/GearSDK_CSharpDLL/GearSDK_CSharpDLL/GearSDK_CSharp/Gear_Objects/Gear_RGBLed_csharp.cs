@@ -24,6 +24,8 @@ namespace GearSDK_CSharpDLL.Gear_Objects
         int g_value;
         int b_value;
 
+        string lastJson;
+
         #endregion
 
         #region Constructors
@@ -91,24 +93,62 @@ namespace GearSDK_CSharpDLL.Gear_Objects
 
         #endregion
 
-
         #region Public Methods
 
         public string UpdatedJson()
         {
-            /*{
-                "name": "rgb_led_0",
-                "mode": "BLINKING",
-                "value": { "r": 0, "g": 1023, "b": 0 }
-                }*/
             string val = "{\"rgb_led\":{\"name\":\"" + this.name + "\",";
             val += "\"mode\":" + this.mode + ",";
             val += "\"value\": {\"r\":" + this.r_value + ", \"g\":" + this.g_value + ", \"b\":" + this.b_value;
             val += "}}}";
 
+            if (val != lastJson)
+            {
+                lastJson = val;
+            }
+            else
+            {
+                val = "";
+            }
+
             return val;
         }
 
         #endregion
+    }
+}
+
+namespace Json.RGBLed
+{
+    public class Value
+    {
+        public int r { get; set; }
+        public int g { get; set; }
+        public int b { get; set; }
+    }
+
+    public class Header
+    {
+        public string name { get; set; }
+        public string pin { get; set; }
+        public int mode { get; set; }
+        public Value value { get; set; }
+    }
+
+    public class Root_Header
+    {
+        public Header rgb_led { get; set; }
+    }
+
+    public class Data
+    {
+        public string name { get; set; }
+        public int mode { get; set; }
+        public Value value { get; set; }
+    }
+
+    public class Root_Data
+    {
+        public Data rgb_led { get; set; }
     }
 }

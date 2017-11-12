@@ -39,11 +39,11 @@
 
 String Gear_Potentiometer::headerJson()
 {	
-    String hJson = "{";
+    String hJson = "{\"potentiometer\":{";
     hJson = hJson + "\"name\"" + ":" + "\"" + this->name + "\",";
     hJson = hJson + "\"pin\"" + ":" + "\"" +  this->pin + "\",";
     hJson = hJson + "\"value\"" + ":" + this->value;
-    hJson = hJson + "}";
+    hJson = hJson + "}}";
 
     return hJson;
 }
@@ -51,8 +51,6 @@ String Gear_Potentiometer::headerJson()
 #pragma endregion
 
 #pragma region Public Attributes
-
-    String Gear_Potentiometer::GetHeader(){ return this->header; }
 
     void Gear_Potentiometer::init()
     {
@@ -78,6 +76,11 @@ String Gear_Potentiometer::headerJson()
         {
             return "";
         }
+    }
+
+    void Gear_Potentiometer::receivedMessage(JsonObject& root, String type)
+    {
+        //This object don't receive messages from clients
     }
 
 #pragma endregion

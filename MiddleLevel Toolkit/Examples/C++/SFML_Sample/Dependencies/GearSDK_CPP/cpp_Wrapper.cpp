@@ -18,87 +18,138 @@ cpp_Wrapper::~cpp_Wrapper()
 
 #pragma region Private Methods
 
-Gear_Button_cpp* cpp_Wrapper::CreateButton(json::value values)
+void cpp_Wrapper::CreateButton(string data)
 {
-	string name = utility::conversions::to_utf8string(values.at(U("name")).as_string());
-	string pin = utility::conversions::to_utf8string(values.at(U("pin")).as_string());
-	int state = values.at(U("state")).as_integer();
-	int type = values.at(U("type")).as_integer();
+	this->jsonValue = StringToJson(data);
 
-	Gear_Button_cpp* btn = new Gear_Button_cpp(this->buttons->size(), name, pin, state, type);
+	if (this->jsonValue == NULL)
+		return;
 
-	return btn;
+	try
+	{
+		auto jsonButton = this->jsonValue.at(U("button"));
+
+		string name = utility::conversions::to_utf8string(jsonButton.at(U("name")).as_string());
+		string pin = utility::conversions::to_utf8string(jsonButton.at(U("pin")).as_string());
+		int state = jsonButton.at(U("state")).as_integer();
+		int type = jsonButton.at(U("type")).as_integer();
+
+		Gear_Button_cpp* btn = new Gear_Button_cpp(this->buttons->size(), name, pin, state, type);
+
+		this->buttons->push_back(btn);
+	}
+	catch (const std::exception& e)
+	{
+		cout << "Exception: " << e.what() << endl;
+	}
 }
 
-Gear_Potentiometer_cpp* cpp_Wrapper::CreatePotentiometer(json::value values)
+void cpp_Wrapper::CreatePotentiometer(string data)
 {
-	string name = utility::conversions::to_utf8string(values.at(U("name")).as_string());
-	string pin = utility::conversions::to_utf8string(values.at(U("pin")).as_string());
-	int value = values.at(U("value")).as_integer();
+	this->jsonValue = StringToJson(data);
 
-	Gear_Potentiometer_cpp* pot = new Gear_Potentiometer_cpp(this->buttons->size(), name, pin, value);
+	if (this->jsonValue == NULL)
+		return;
 
-	return pot;
+	try
+	{
+		auto jsonPot = this->jsonValue.at(U("potentiometer"));
+
+		string name = utility::conversions::to_utf8string(jsonPot.at(U("name")).as_string());
+		string pin = utility::conversions::to_utf8string(jsonPot.at(U("pin")).as_string());
+		int value = jsonPot.at(U("value")).as_integer();
+
+		Gear_Potentiometer_cpp* pot = new Gear_Potentiometer_cpp(this->buttons->size(), name, pin, value);
+		this->potentiometers->push_back(pot);
+	}
+	catch (const std::exception& e)
+	{
+		cout << "Exception: " << e.what() << endl;
+	}
 }
 
-Gear_RGBLed_cpp* cpp_Wrapper::CreateRGBLed(json::value values)
+void cpp_Wrapper::CreateRGBLed(string data)
 {
-	string name = utility::conversions::to_utf8string(values.at(U("name")).as_string());
-	string pin = utility::conversions::to_utf8string(values.at(U("pin")).as_string());
-	int mode = values.at(U("mode")).as_integer();
+	this->jsonValue = StringToJson(data);
+
+	if (this->jsonValue == NULL)
+		return;
+
+	try
+	{
+		auto jsonRGBLed = this->jsonValue.at(U("rgb_led"));
+		string name = utility::conversions::to_utf8string(jsonRGBLed.at(U("name")).as_string());
+		string pin = utility::conversions::to_utf8string(jsonRGBLed.at(U("pin")).as_string());
+		int mode = jsonRGBLed.at(U("mode")).as_integer();
 
 
-	auto vals = values.at(U("value")).as_object();
-	int i_vals[3] = { 0,0,0 };
+		auto vals = jsonRGBLed.at(U("value")).as_object();
+		int i_vals[3] = { 0,0,0 };
 
-	i_vals[0] = vals.at(U("r")).as_integer();
-	i_vals[1] = vals.at(U("g")).as_integer();
-	i_vals[2] = vals.at(U("b")).as_integer();
+		i_vals[0] = vals.at(U("r")).as_integer();
+		i_vals[1] = vals.at(U("g")).as_integer();
+		i_vals[2] = vals.at(U("b")).as_integer();
 
-	vector<string> pins = split(pin, ",");
+		vector<string> pins = split(pin, ",");
 
-	string pin_r = pins[0];
-	string pin_g = pins[1];
-	string pin_b = pins[2];
+		string pin_r = pins[0];
+		string pin_g = pins[1];
+		string pin_b = pins[2];
 
-	Gear_RGBLed_cpp* rgbLed = new Gear_RGBLed_cpp(this->rgbLeds->size(), name, pin_r, pin_g, pin_b, mode, i_vals[0], i_vals[1], i_vals[2]);
-
-	return rgbLed;
+		Gear_RGBLed_cpp* rgbLed = new Gear_RGBLed_cpp(this->rgbLeds->size(), name, pin_r, pin_g, pin_b, mode, i_vals[0], i_vals[1], i_vals[2]);
+		this->rgbLeds->push_back(rgbLed);
+	}
+	catch (const std::exception& e)
+	{
+		cout << "Exception: " << e.what() << endl;
+	}
 }
 
-Gear_MPU6050_cpp* cpp_Wrapper::CreateMPU6050(json::value values)
+void cpp_Wrapper::CreateMpu(string data)
 {
-	string name = utility::conversions::to_utf8string(values.at(U("name")).as_string());
-	string pin = utility::conversions::to_utf8string(values.at(U("pins")).as_string());
-	
-	vector<string> pins = split(pin, ",");
-	string pin_sda = pins[0];
-	string pin_scl = pins[1];
+	this->jsonValue = StringToJson(data);
 
-	auto accel_vals = values.at(U("accel")).as_object();
-	int accel[3] = { 0,0,0 };
+	if (this->jsonValue == NULL)
+		return;
 
-	accel[0] = accel_vals.at(U("x")).as_integer();
-	accel[1] = accel_vals.at(U("y")).as_integer();
-	accel[2] = accel_vals.at(U("z")).as_integer();
+	try
+	{
+		auto jsonMPU = this->jsonValue.at(U("mpu"));
+		string name = utility::conversions::to_utf8string(jsonMPU.at(U("name")).as_string());
+		string pin = utility::conversions::to_utf8string(jsonMPU.at(U("pins")).as_string());
 
-	auto gyro_vals = values.at(U("gyro")).as_object();
-	int gyro[3] = { 0,0,0 };
+		vector<string> pins = split(pin, ",");
+		string pin_sda = pins[0];
+		string pin_scl = pins[1];
 
-	gyro[0] = gyro_vals.at(U("x")).as_integer();
-	gyro[1] = gyro_vals.at(U("y")).as_integer();
-	gyro[2] = gyro_vals.at(U("z")).as_integer();
+		auto accel_vals = jsonMPU.at(U("accel")).as_object();
+		int accel[3] = { 0,0,0 };
 
-	auto angle_vals = values.at(U("angle")).as_object();
-	double angle[3] = { 0,0,0 };
+		accel[0] = accel_vals.at(U("x")).as_integer();
+		accel[1] = accel_vals.at(U("y")).as_integer();
+		accel[2] = accel_vals.at(U("z")).as_integer();
 
-	angle[0] = angle_vals.at(U("x")).as_double();
-	angle[1] = angle_vals.at(U("y")).as_double();
-	angle[2] = angle_vals.at(U("z")).as_double();
+		auto gyro_vals = jsonMPU.at(U("gyro")).as_object();
+		int gyro[3] = { 0,0,0 };
 
-	Gear_MPU6050_cpp* mpu6050 = new Gear_MPU6050_cpp(this->mpus->size(), name, pin_sda, pin_scl, accel, gyro, angle);
+		gyro[0] = gyro_vals.at(U("x")).as_integer();
+		gyro[1] = gyro_vals.at(U("y")).as_integer();
+		gyro[2] = gyro_vals.at(U("z")).as_integer();
 
-	return mpu6050;
+		auto angle_vals = jsonMPU.at(U("angle")).as_object();
+		double angle[3] = { 0,0,0 };
+
+		angle[0] = angle_vals.at(U("x")).as_double();
+		angle[1] = angle_vals.at(U("y")).as_double();
+		angle[2] = angle_vals.at(U("z")).as_double();
+
+		Gear_MPU6050_cpp* mpu6050 = new Gear_MPU6050_cpp(this->mpus->size(), name, pin_sda, pin_scl, accel, gyro, angle);
+		this->mpus->push_back(mpu6050);
+	}
+	catch (const std::exception& e)
+	{
+		cout << "Exception: " << e.what() << endl;
+	}
 }
 
 
@@ -210,23 +261,21 @@ void cpp_Wrapper::UpdateMpu(string data)
 				
 		string objName = utility::conversions::to_utf8string(jsonMpu.at(U("name")).as_string());
 
-		auto accel_vals = jsonMpu.at(U("accel")).as_object();
 		int accel[3] = { 0,0,0 };
+		int gyro[3] = { 0,0,0 };
+		double angle[3] = { 0,0,0 };
 
+		auto accel_vals = jsonMpu.at(U("accel")).as_object();;
 		accel[0] = accel_vals.at(U("x")).as_integer();
 		accel[1] = accel_vals.at(U("y")).as_integer();
 		accel[2] = accel_vals.at(U("z")).as_integer();
 
-		auto gyro_vals = jsonMpu.at(U("gyro")).as_object();
-		int gyro[3] = { 0,0,0 };
-
+		auto gyro_vals = jsonMpu.at(U("gyro")).as_object();;
 		gyro[0] = gyro_vals.at(U("x")).as_integer();
 		gyro[1] = gyro_vals.at(U("y")).as_integer();
 		gyro[2] = gyro_vals.at(U("z")).as_integer();
 
-		auto angle_vals = jsonMpu.at(U("angle")).as_object();
-		double angle[3] = { 0,0,0 };
-
+		auto angle_vals = jsonMpu.at(U("angle")).as_object();;
 		angle[0] = angle_vals.at(U("x")).as_double();
 		angle[1] = angle_vals.at(U("y")).as_double();
 		angle[2] = angle_vals.at(U("z")).as_double();
@@ -237,6 +286,7 @@ void cpp_Wrapper::UpdateMpu(string data)
 			string name = this->mpus->at(i)->GetName();
 			if (name == objName)
 			{
+				//TODO: SOLVE PROBLEM ON GET VALUES FROM MPU
 				//this->mpus->at(i)->SetAccelValues(accel);
 				//this->mpus->at(i)->SetGyroValues(gyro);
 				//this->mpus->at(i)->SetAngleValues(angle);
@@ -305,161 +355,65 @@ string cpp_Wrapper::JsonToString(json::value json)
 }
 
 void cpp_Wrapper::Init(string header)
-{
-	//TODO: FALTA FAZER O RESTO DOS ELEMENTOS
-	// ATUALMENTE JA TEM BOTAO E RGBLED
-
-	/* Header Reference
-	{
-  "header": {
-    "buttons": [
-      {
-        "name": "button_0",
-        "pin": "D2",
-        "state": false,
-        "type" : "PUSH_BUTTON"
-      },
-      {
-        "name": "button_1",
-        "pin": "D3",
-        "state": false,
-        "type" : "PUSH_BUTTON"
-      }
-    ],
-    "rgb_leds": [
-      {
-        "name": "rgb_led_0",
-        "pin": "D3,D4,D5",
-        "mode": "BLINKING",
-        "value": {
-          "r": 0,
-          "g": 1023,
-          "b": 0
-        }
-      }
-    ],
-    "leds": [
-      {
-        "name": "led_0",
-        "pin": "D8",
-        "value": 1
-      },
-      {
-        "name": "led_1",
-        "pin": "D9",
-        "mode": "STATIC",
-        "value": 0
-      }
-    ],
-    "accelerometer": {
-      "name": "accelerometer_0",
-      "pins": "D6,D7",
-      "value": {
-        "x": 0,
-        "y": 0,
-        "z": 0
-      }
-    },
-    "gyroscope": {
-      "id": "gyroscope_0",
-      "pin": "D6,D7",
-      "value": {
-        "x": 0,
-        "y": 0,
-        "z": 0,
-        "w": 0
-      }
-    }
-  }
-}
-	*/
-	
-	if (header[0] == '{') //if it's probably a json
-	{
-		this->header = StringToJson(header);
-
-		if (this->header != NULL)
-		{
-			try
-			{
-				auto data = this->header.at(U("header"));
-
-				this->headerSetted = true;
-
-				try
-				{
-					//-------- buttons ------------
-					string_t t_key = conversions::to_string_t("buttons");
-
-					json::array buttons = data.at(t_key).as_array();
-
-					for (size_t i = 0; i < buttons.size(); i++)
-						this->buttons->push_back(CreateButton(buttons[i]));
-					//-----------------------------
-
-
-					//-------- potentiometers ------------
-					t_key = conversions::to_string_t("potentiometers");
-
-					json::array pots = data.at(t_key).as_array();
-
-					for (size_t i = 0; i < pots.size(); i++)
-						this->potentiometers->push_back(CreatePotentiometer(pots[i]));
-					//------------------------------------
-
-					//-------- rgb leds ------------
-					t_key = conversions::to_string_t("rgb_leds");
-
-					json::array rgbLeds = data.at(t_key).as_array();
-
-					for (size_t i = 0; i < rgbLeds.size(); i++)
-						this->rgbLeds->push_back(CreateRGBLed(rgbLeds[i]));
-					//------------------------------
-
-					//--------- mpu6050 ------------
-					t_key = conversions::to_string_t("mpus");
-
-					json::array mpus = data.at(t_key).as_array();
-
-					for (size_t i = 0; i < mpus.size(); i++)
-						this->mpus->push_back(CreateMPU6050(mpus[i]));
-					//------------------------------
-				}
-				catch (const std::exception& e)
-				{
-					cout << "Exception: " << e.what() << " OR don't have buttons" << endl;
-				}
-			}
-			catch (const std::exception& e)
-			{
-				cout << "Exception: " << e.what() << endl;
-			}
-		}
-	}
-}
-
-void cpp_Wrapper::UpdateObjects(string data)
-{
+{	
 	try
 	{
-		vector<string> jsons = split(data, "@");
+		vector<string> jsons = split(header, "#");
+		
+		if (jsons.size() <= 0)
+			return;
 
-		for (int i = 0; i < jsons.size(); i++)
+		if (jsons[0] == "header") //if it's a data message
 		{
-			if (jsons[i].find("button") != std::string::npos)
-				UpdateButton(jsons[i]);
-			else if (jsons[i].find("potentiometer") != std::string::npos)
-				UpdatePotentiometer(jsons[i]);
-			else if (jsons[i].find("rgb_led") != std::string::npos)
-				UpdateRGBLed(jsons[i]);
-			else if (jsons[i].find("mpu") != std::string::npos)
-				UpdateMpu(jsons[i]);
+			for (int i = 1; i < jsons.size(); i++)
+			{
+				if (jsons[i].find("button") != std::string::npos)
+					CreateButton(jsons[i]);
+				else if (jsons[i].find("potentiometer") != std::string::npos)
+					CreatePotentiometer(jsons[i]);
+				else if (jsons[i].find("rgb_led") != std::string::npos)
+					CreateRGBLed(jsons[i]);
+				else if (jsons[i].find("mpu") != std::string::npos)
+					CreateMpu(jsons[i]);
+			}
+
+			this->headerSetted = true;
 		}
 	}
 	catch (const std::exception& e)
 	{
 		cout << "Exception: " << e.what() << endl;
 	}
+}
+
+void cpp_Wrapper::UpdateObjects(string data)
+{
+		try
+		{
+			vector<string> jsons = split(data, "#");
+
+			if (jsons.size() <= 0)
+				return;
+
+			if (jsons[0] == "data") //if it's a data message
+			{
+				for (int i = 1; i < jsons.size(); i++)
+				{
+					if (jsons[i].find("button") != std::string::npos)
+						UpdateButton(jsons[i]);
+					else if (jsons[i].find("potentiometer") != std::string::npos)
+						UpdatePotentiometer(jsons[i]);
+					else if (jsons[i].find("rgb_led") != std::string::npos)
+						UpdateRGBLed(jsons[i]);
+					else if (jsons[i].find("mpu") != std::string::npos)
+						UpdateMpu(jsons[i]);
+				}
+			}
+		}
+		catch (const std::exception& e)
+		{
+			cout << "Exception: " << e.what() << endl;
+		}
 }
 
 #pragma endregion

@@ -43,3 +43,29 @@ namespace GearSDK_CSharpDLL.Gear_Objects
         #endregion
     }
 }
+
+namespace Json.Potentiometer
+{
+    public class Header
+    {
+        public string name { get; set; }
+        public string pin { get; set; }
+        public int value { get; set; }
+    }
+
+    public class Root_Header
+    {
+        public Header potentiometer { get; set; }
+    }
+
+    public class Data
+    {
+        public string name { get; set; }
+        public int value { get; set; }
+    }
+
+    public class Root_Data
+    {
+        public Data potentiometer { get; set; }
+    }
+}

@@ -71,3 +71,55 @@ namespace GearSDK_CSharpDLL.Gear_Objects
         #endregion
     }
 }
+
+namespace Json.MPU
+{
+    public class Accel
+    {
+        public int x { get; set; }
+        public int y { get; set; }
+        public int z { get; set; }
+    }
+
+    public class Gyro
+    {
+        public int x { get; set; }
+        public int y { get; set; }
+        public int z { get; set; }
+    }
+
+    public class Angle
+    {
+        public double x { get; set; }
+        public double y { get; set; }
+        public double z { get; set; }
+    }
+
+
+    public class Header
+    {
+        public string name { get; set; }
+        public string pins { get; set; }
+        public Accel accel { get; set; }
+        public Gyro gyro { get; set; }
+        public Angle angle { get; set; }
+    }
+
+    public class Root_Header
+    {
+        public Header mpu { get; set; }
+    }
+
+    public class Data
+    {
+        public string name { get; set; }
+        public Accel accel { get; set; }
+        public Gyro gyro { get; set; }
+        public Angle angle { get; set; }
+    }
+
+    public class Root_Data
+    {
+        public Data mpu { get; set; }
+    }
+}

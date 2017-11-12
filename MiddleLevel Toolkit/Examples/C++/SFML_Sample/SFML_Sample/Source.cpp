@@ -37,7 +37,9 @@ void Update_GearObjects()
 		client.wrapper.GetRGBLed(0)->SetMode(LedMode::STATIC);
 		//wrapper.GetRGBLed(0)->SetMode(LedMode::BLINKING, 500, 100);
 		string s = client.wrapper.GetRGBLed(0)->UpdatedJson();
-		client.connection.SendMessage(s);
+		
+		if (s != "")
+			client.connection.SendMessage(s);
 	}
 	else
 	{
@@ -45,9 +47,12 @@ void Update_GearObjects()
 		client.wrapper.GetRGBLed(0)->SetMode(LedMode::STATIC);
 		
 		string s = client.wrapper.GetRGBLed(0)->UpdatedJson();
-		client.connection.SendMessage(s);
+		
+		if(s != "")
+			client.connection.SendMessage(s);
 	}
 	//TODO: need a timer here!
+	this_thread::sleep_for(chrono::milliseconds(20));
 }
 
 void Update_SFLMObjects()
@@ -82,7 +87,7 @@ void Update_SFLMObjects()
 
 }
 
-void GearSDL_Loop()
+void GearSDK_Loop()
 {
 	if (client.connection.IsConnected())
 	{
@@ -103,7 +108,7 @@ void SFML_Loop()
 				screen.window->close();
 		}
 
-		GearSDL_Loop();
+		GearSDK_Loop();
 
 		screen.WindowUpdate();
 	}
