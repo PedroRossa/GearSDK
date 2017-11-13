@@ -17,6 +17,7 @@ namespace GearSDK_CSharpDLL
         List<Gear_Objects.Gear_Potentiometer_csharp> potentiometers;
         List<Gear_Objects.Gear_RGBLed_csharp> rgbLeds;
         List<Gear_Objects.Gear_MPU6050_csharp> mpus;
+        List<Gear_Objects.Gear_Servo_csharp> servos;
 
         #endregion
 
@@ -78,6 +79,19 @@ namespace GearSDK_CSharpDLL
             return mpu;
         }
 
+        Gear_Servo_csharp CreateServo(Json.Servo.Header jData)
+        {
+
+            string name = jData.name;
+            string pin = jData.pin;
+            int value = jData.value;
+
+            Gear_Servo_csharp serv = new Gear_Servo_csharp(this.servos.Count, name, pin, value);
+
+            this.servos.Add(serv);
+            return serv;
+        }
+
 
         bool UpdateButton(Json.Button.Data jData)
         {
@@ -137,6 +151,21 @@ namespace GearSDK_CSharpDLL
             return false;
         }
 
+        bool UpdateServo(Json.Servo.Data jData)
+        {
+            string name = jData.name;
+            int value = jData.value;
+            for (int i = 0; i < this.servos.Count; i++)
+            {
+                if (this.servos[i].Name == name)
+                {
+                    this.servos[i].Value = value;
+                    return true;
+                }
+            }
+            return false;
+        }
+
         #endregion
 
         #region Constructors
@@ -147,6 +176,7 @@ namespace GearSDK_CSharpDLL
             this.potentiometers = new List<Gear_Objects.Gear_Potentiometer_csharp>();
             this.mpus = new List<Gear_Objects.Gear_MPU6050_csharp>();
             this.rgbLeds = new List<Gear_Objects.Gear_RGBLed_csharp>();
+            this.servos = new List<Gear_Objects.Gear_Servo_csharp>();
         }
 
         #endregion
@@ -160,7 +190,8 @@ namespace GearSDK_CSharpDLL
         public List<Gear_Potentiometer_csharp> Potentiometers { get => potentiometers; }
         public List<Gear_RGBLed_csharp> RgbLeds { get => rgbLeds; }
         public List<Gear_MPU6050_csharp> Mpus { get => mpus; }
-        
+        public List<Gear_Servo_csharp> Servos { get => servos; }
+
         #endregion
 
         #region Public Methods
@@ -200,6 +231,12 @@ namespace GearSDK_CSharpDLL
                             {
                                 Json.MPU.Root_Header rh = JsonConvert.DeserializeObject<Json.MPU.Root_Header>(jsonHeaders[i]);
                                 CreateMPU6050(rh.mpu);
+                            }
+                            //-------- SERVO ------------
+                            else if (jsonHeaders[i].Contains("servo"))
+                            {
+                                Json.Servo.Root_Header rh = JsonConvert.DeserializeObject <Json.Servo.Root_Header>(jsonHeaders[i]);
+                                CreateServo(rh.servo);
                             }
                         }
                         catch (Exception e)
@@ -254,6 +291,12 @@ namespace GearSDK_CSharpDLL
                             {
                                 Json.MPU.Root_Data rd = JsonConvert.DeserializeObject<Json.MPU.Root_Data>(jsonDatas[i]);
                                 UpdateMPU(rd.mpu);
+                            }
+                            //-------- SERVO ------------
+                            if (jsonDatas[i].Contains("<MY_OBJECT_TAG>"))
+                            {
+                                Json.Servo.Root_Data rd = JsonConvert.DeserializeObject<Json.Servo.Root_Data>(jsonDatas[i]);
+                                UpdateServo(rd.servo);
                             }
                         }
                         catch (Exception e)

@@ -6,8 +6,9 @@ cpp_Wrapper::cpp_Wrapper()
 {
 	this->buttons = new vector<Gear_Button_cpp*>();
 	this->potentiometers = new vector<Gear_Potentiometer_cpp*>();
-	this->mpus = new vector<Gear_MPU6050_cpp*>();
 	this->rgbLeds = new vector<Gear_RGBLed_cpp*>();
+	this->mpus = new vector<Gear_MPU6050_cpp*>();
+	this->servos = new vector<Gear_Servo_cpp*>();
 }
 
 cpp_Wrapper::~cpp_Wrapper()
@@ -145,6 +146,31 @@ void cpp_Wrapper::CreateMpu(string data)
 
 		Gear_MPU6050_cpp* mpu6050 = new Gear_MPU6050_cpp(this->mpus->size(), name, pin_sda, pin_scl, accel, gyro, angle);
 		this->mpus->push_back(mpu6050);
+	}
+	catch (const std::exception& e)
+	{
+		cout << "Exception: " << e.what() << endl;
+	}
+}
+
+void cpp_Wrapper::CreateServo(string data)
+{
+	this->jsonValue = StringToJson(data);
+
+	if (this->jsonValue == NULL)
+		return;
+
+	try
+	{
+		auto jsonButton = this->jsonValue.at(U("servo"));
+
+		string name = utility::conversions::to_utf8string(jsonButton.at(U("name")).as_string());
+		string pin = utility::conversions::to_utf8string(jsonButton.at(U("pin")).as_string());
+		int value = jsonButton.at(U("value")).as_integer();
+
+		Gear_Servo_cpp* serv = new Gear_Servo_cpp(this->servos->size(), name, pin, value);
+
+		this->servos->push_back(serv);
 	}
 	catch (const std::exception& e)
 	{
@@ -299,6 +325,35 @@ void cpp_Wrapper::UpdateMpu(string data)
 	}
 }
 
+void cpp_Wrapper::UpdateServo(string data)
+{
+	this->jsonValue = StringToJson(data);
+
+	if (this->jsonValue == NULL)
+		return;
+
+	try
+	{
+		auto jsonMyObject = this->jsonValue.at(U("servo"));
+
+		string objName = utility::conversions::to_utf8string(jsonMyObject.at(U("name")).as_string());
+		int value = jsonMyObject.at(U("value")).as_integer();
+
+		for (size_t i = 0; i < this->servos->size(); i++)
+		{
+			string name = this->servos->at(i)->GetName();
+			if (name == objName)
+			{
+				this->servos->at(i)->SetValue(value);
+			}
+		}
+	}
+	catch (const std::exception& e)
+	{
+		cout << "Exception: " << e.what() << endl;
+	}
+}
+
 #pragma endregion
 
 #pragma region Gets and Sets
@@ -312,6 +367,7 @@ Gear_Button_cpp* cpp_Wrapper::GetButton(int id) { return this->buttons->at(id); 
 Gear_Potentiometer_cpp* cpp_Wrapper::GetPotentiometer(int id) { return this->potentiometers->at(id); }
 Gear_RGBLed_cpp* cpp_Wrapper::GetRGBLed(int id) { return this->rgbLeds->at(id); }
 Gear_MPU6050_cpp* cpp_Wrapper::GetMPU6050(int id) { return this->mpus->at(id); }
+Gear_Servo_cpp* cpp_Wrapper::GetServo(int id) { return this->servos->at(id); }
 
 #pragma endregion
 
@@ -371,7 +427,9 @@ void cpp_Wrapper::Init(string header)
 				else if (jsons[i].find("rgb_led") != std::string::npos)
 					CreateRGBLed(jsons[i]);
 				else if (jsons[i].find("mpu") != std::string::npos)
-					CreateMpu(jsons[i]);
+					CreateMpu(jsons[i]); 
+				else if (jsons[i].find("servo") != std::string::npos)
+					CreateServo(jsons[i]);
 			}
 
 			this->headerSetted = true;
@@ -403,7 +461,9 @@ void cpp_Wrapper::UpdateObjects(string data)
 					else if (jsons[i].find("rgb_led") != std::string::npos)
 						UpdateRGBLed(jsons[i]);
 					else if (jsons[i].find("mpu") != std::string::npos)
-						UpdateMpu(jsons[i]);
+						UpdateMpu(jsons[i]); 
+					else if (jsons[i].find("servo") != std::string::npos)
+						UpdateServo(jsons[i]);
 				}
 			}
 		}

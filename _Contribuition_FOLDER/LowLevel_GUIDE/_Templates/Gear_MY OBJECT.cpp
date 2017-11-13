@@ -21,7 +21,17 @@ Gear_<MY OBJECT>::Gear_<MY OBJECT>(String name, int pin, int value)
     jsonBuffer = new DynamicJsonBuffer(bufSize);
 	
 	//<object_TAG> is the identifier of the object, like: "button", "potentiometer", etc
-    
+        
+	/*Create a JSON to represent your object
+		It's necessary to respect this sintax
+        {
+            "<object_TAG>":
+            {
+                fields
+            }
+        }
+
+    */
     const char* dataJson = "{\"<my_object_TAG>\":{\"name\":\" name Here \", \"value\":0}}";
     this->json =  &jsonBuffer->parseObject(dataJson);
 }
@@ -39,12 +49,22 @@ Gear_<MY OBJECT>::~Gear_<MY OBJECT>(){}
 
 #pragma region Private Methods
 
+/*Create a JSON to represent your data object, put only important fields
+		It's necessary to respect this sintax
+        {
+            "<object_TAG>":
+            {
+                fields
+            }
+        }
+
+    */
 String Gear_<MY OBJECT>::headerJson()
 {
     String hJson = "{\"<my_object_TAG>\":{";
     hJson = hJson + "\"name\"" + ":" + "\"" + this->name + "\",";
     hJson = hJson + "\"pin\"" + ":" + "\"" +  this->pin + "\",";
-    hJson = hJson + "\"value\"" + ":" + "\"" +  this->value;
+    hJson = hJson + "\"value\"" + ":" +  this->value;
     hJson = hJson + "}}";
 
     return hJson;

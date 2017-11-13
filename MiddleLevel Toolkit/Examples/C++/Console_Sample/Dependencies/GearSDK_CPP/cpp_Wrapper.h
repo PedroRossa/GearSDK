@@ -8,6 +8,7 @@
 #include "Gear_Objects\Gear_Potentiometer_cpp.h"
 #include "Gear_Objects\Gear_RGBLed_cpp.h"
 #include "Gear_Objects\Gear_MPU6050_cpp.h"
+#include "Gear_Objects\Gear_Servo_cpp.h"
 
 using namespace std;
 using namespace web;
@@ -28,6 +29,7 @@ class cpp_Wrapper
 	vector<Gear_Potentiometer_cpp*>* potentiometers;
 	vector<Gear_RGBLed_cpp*>* rgbLeds;
 	vector<Gear_MPU6050_cpp*>* mpus;
+	vector<Gear_Servo_cpp*>* servos;
 
 #pragma endregion
 
@@ -37,11 +39,13 @@ class cpp_Wrapper
 	void CreatePotentiometer(string data);
 	void CreateRGBLed(string data);
 	void CreateMpu(string data);
+	void CreateServo(string data);
 
 	void UpdateButton(string data);
 	void UpdatePotentiometer(string data);
 	void UpdateRGBLed(string data);
 	void UpdateMpu(string data);
+	void UpdateServo(string data);
 
 #pragma endregion
 	
@@ -65,6 +69,7 @@ public:
 	Gear_Potentiometer_cpp* GetPotentiometer(int id);
 	Gear_RGBLed_cpp* GetRGBLed(int id);
 	Gear_MPU6050_cpp* GetMPU6050(int id);
+	Gear_Servo_cpp* GetServo(int id);
 
 #pragma endregion
 

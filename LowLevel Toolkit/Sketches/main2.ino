@@ -34,6 +34,7 @@ void setup()
     gearManager->add(button_0);
     gearManager->add(pot);
     gearManager->add(rgbLed);
+    gearManager->add(servo_0);
 
     //Init the objects
     gearManager->init();
@@ -96,7 +97,7 @@ void webSocketEvent(uint8_t num, int type, uint8_t* payload, size_t length)
             break;
         }
         case WStype_TEXT:{
-            Serial.printf("[%u] get Text: %s\n", num, payload);
+            //Serial.printf("[%u] get Text: %s\n", num, payload);
             if(payload[0] == '_')
             {
                 // webSocket.sendTXT(num, parserJSON);

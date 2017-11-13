@@ -75,7 +75,7 @@ Now, gonna make changes to wrapper recognize the new Gear Object
 					string name = this->myObjects->at(i)->GetName();
 					if (name == objName)
 					{
-						this->myObjects->at(i)->SetState((bool)state);
+						this->myObjects->at(i)->SetValue(value);
 					}
 				}
 			}

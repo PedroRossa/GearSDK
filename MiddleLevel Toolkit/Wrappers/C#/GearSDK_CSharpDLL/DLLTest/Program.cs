@@ -39,12 +39,15 @@ namespace DLLTest
                 int g = client.wrapper.RgbLeds[0].G_value;
                 int b = client.wrapper.RgbLeds[0].B_value;
 
+                int motorValue = client.wrapper.Servos[0].Value;
+
                 Console.WriteLine("BUTTON: " + buttonState);
                 Console.WriteLine("POTENTIOMETER: " + potentiometer);
                 Console.WriteLine("ACELEROMETER: (" + acellX + ", " + acellY + ", " + acellZ + ")");
                 Console.WriteLine("GYRO: (" + gyroX + ", " + gyroY + ", " + gyroZ + ")");
                 Console.WriteLine("ANGLE: (" + angleX + ", " + angleY + ", " + angleZ + ")");
                 Console.WriteLine("RGB LED: (" + r + ", " + g + ", " + b + ")");
+                Console.WriteLine("SERVO: " + motorValue);
 
                 float intensity = potentiometer / 1000.0f;
 
@@ -59,6 +62,13 @@ namespace DLLTest
                     {
                         client.connection.SendMessage(s);
                     }
+
+                    client.wrapper.Servos[0].Value = 0;
+                    s = client.wrapper.Servos[0].UpdatedJson();
+                    if (!String.IsNullOrEmpty(s))
+                    {
+                        client.connection.SendMessage(s);
+                    }
                 }
                 else
                 {
@@ -67,6 +77,13 @@ namespace DLLTest
 
                     string s = client.wrapper.RgbLeds[0].UpdatedJson();
                     
+                    if (!String.IsNullOrEmpty(s))
+                    {
+                        client.connection.SendMessage(s);
+                    }
+
+                    client.wrapper.Servos[0].Value = 15;
+                    s = client.wrapper.Servos[0].UpdatedJson();
                     if (!String.IsNullOrEmpty(s))
                     {
                         client.connection.SendMessage(s);

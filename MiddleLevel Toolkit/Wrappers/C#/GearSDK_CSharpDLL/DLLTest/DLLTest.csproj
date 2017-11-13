@@ -54,6 +54,7 @@
     <Compile Include="GearSDK_CSharp\Gear_Objects\Gear_MPU6050_csharp.cs" />
     <Compile Include="GearSDK_CSharp\Gear_Objects\Gear_Potentiometer_csharp.cs" />
     <Compile Include="GearSDK_CSharp\Gear_Objects\Gear_RGBLed_csharp.cs" />
+    <Compile Include="GearSDK_CSharp\Gear_Objects\Gear_Servo_Csharp.cs" />
     <Compile Include="GearSDK_CSharp\Helper.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

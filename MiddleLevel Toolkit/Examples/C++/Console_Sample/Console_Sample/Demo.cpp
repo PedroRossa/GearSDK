@@ -26,8 +26,11 @@ void UpdateObjects()
 	int g = client.wrapper.GetRGBLed(0)->Get_G_Value();
 	int b = client.wrapper.GetRGBLed(0)->Get_B_Value();
 
+	int motorVal = client.wrapper.GetServo(0)->GetValue();
+
 	cout << "BUTTON: " << buttonState << endl;
 	cout << "POTENTIOMETER: " << potentiometer << endl;
+	cout << "MOTOR: " << motorVal << endl;
 	//cout << "ACELEROMETER: (" << acellX << ", " << acellY << ", " << acellZ << ")" << endl;
 	//cout << "GYRO: (" << gyroX << ", " << gyroY << ", " << gyroZ << ")" << endl;
 	//cout << "ANGLE: (" << angleX << ", " << angleY << ", " << angleZ << ")" << endl;
@@ -50,6 +53,14 @@ void UpdateObjects()
 		{
 			client.connection.SendMessage(s);
 		}
+
+		client.wrapper.GetServo(0)->SetValue(0);
+		s = client.wrapper.GetServo(0)->UpdatedJson();
+		
+		if (s != "")
+		{
+			client.connection.SendMessage(s);
+		}
 	}
 	else
 	{
@@ -62,12 +73,20 @@ void UpdateObjects()
 		{
 			client.connection.SendMessage(s);
 		}
+
+		client.wrapper.GetServo(0)->SetValue(15);
+		s = client.wrapper.GetServo(0)->UpdatedJson();
+
+		if (s != "")
+		{
+			client.connection.SendMessage(s);
+		}
 	}
 }
 
 int main()
 {
-	client = Cpp_Client("192.168.15.4", 81);
+	client = Cpp_Client("192.168.43.36", 81);
 
 	client.Init();
 
