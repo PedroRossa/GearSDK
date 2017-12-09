@@ -6,7 +6,7 @@ Create objects on SDK with your sensors.
 If you want to help to improve the GearSDK, you can create your own objects, and make a pull request;
 To do that, you just need to follow this steps:
 
-   * use the [Low Level GUIDE](https://github.com/PedroRossa/GearSDK/tree/master/_Contribuition_FOLDER/MiddleLevel_GUIDE), to create new objects on hardware level
+   * use the [Low Level GUIDE](https://github.com/PedroRossa/GearSDK/tree/master/_Contribuition_FOLDER/LowLevel_GUIDE), to create new objects on hardware level
 
    * use the [Middle Level GUIDE](https://github.com/PedroRossa/GearSDK/tree/master/_Contribuition_FOLDER/MiddleLevel_GUIDE), to create the wrappers of the object
 
