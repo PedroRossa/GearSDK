@@ -11,8 +11,8 @@
 
 // Definições da rede Wifi
 
-char* SSID = "MILIOPA";
-char* PASSWORD = "balapacaraio@2017";
+char* SSID = "teste";
+char* PASSWORD = "12345678";
 
 const int MPU_ADDR = 0x68;
 
