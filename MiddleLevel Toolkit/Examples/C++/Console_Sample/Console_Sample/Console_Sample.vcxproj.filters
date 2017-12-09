@@ -48,6 +48,12 @@
     <ClCompile Include="..\Dependencies\GearSDK_CPP\Gear_Objects\Gear_Servo_cpp.cpp">
       <Filter>GearSDK_CPP\Gear_Objects</Filter>
     </ClCompile>
+    <ClCompile Include="..\Dependencies\GearSDK_CPP\Gear_Objects\Gear_HallEffect_cpp.cpp">
+      <Filter>GearSDK_CPP\Gear_Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Dependencies\GearSDK_CPP\Gear_Objects\Gear_PulseDetector_cpp.cpp">
+      <Filter>GearSDK_CPP\Gear_Objects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Dependencies\GearSDK_CPP\Cpp_Client.h">
@@ -75,6 +81,12 @@
       <Filter>GearSDK_CPP\Gear_Objects</Filter>
     </ClInclude>
     <ClInclude Include="..\Dependencies\GearSDK_CPP\Gear_Objects\Gear_Servo_cpp.h">
+      <Filter>GearSDK_CPP\Gear_Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dependencies\GearSDK_CPP\Gear_Objects\Gear_HallEffect_cpp.h">
+      <Filter>GearSDK_CPP\Gear_Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dependencies\GearSDK_CPP\Gear_Objects\Gear_PulseDetector_cpp.h">
       <Filter>GearSDK_CPP\Gear_Objects</Filter>
     </ClInclude>
   </ItemGroup>

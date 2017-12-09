@@ -126,6 +126,7 @@
     <ClCompile Include="..\Dependencies\GearSDK_CPP\Gear_Objects\Gear_MPU6050_cpp.cpp" />
     <ClCompile Include="..\Dependencies\GearSDK_CPP\Gear_Objects\Gear_Potentiometer_cpp.cpp" />
     <ClCompile Include="..\Dependencies\GearSDK_CPP\Gear_Objects\Gear_RGBLed_cpp.cpp" />
+    <ClCompile Include="..\Dependencies\GearSDK_CPP\Gear_Objects\Gear_Servo_cpp.cpp" />
     <ClCompile Include="Screen.cpp" />
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
@@ -137,6 +138,7 @@
     <ClInclude Include="..\Dependencies\GearSDK_CPP\Gear_Objects\Gear_MPU6050_cpp.h" />
     <ClInclude Include="..\Dependencies\GearSDK_CPP\Gear_Objects\Gear_Potentiometer_cpp.h" />
     <ClInclude Include="..\Dependencies\GearSDK_CPP\Gear_Objects\Gear_RGBLed_cpp.h" />
+    <ClInclude Include="..\Dependencies\GearSDK_CPP\Gear_Objects\Gear_Servo_cpp.h" />
     <ClInclude Include="..\Dependencies\GearSDK_CPP\Helper.h" />
     <ClInclude Include="Screen.h" />
   </ItemGroup>

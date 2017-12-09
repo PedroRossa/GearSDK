@@ -9,6 +9,8 @@
 #include "Gear_Objects\Gear_RGBLed_cpp.h"
 #include "Gear_Objects\Gear_MPU6050_cpp.h"
 #include "Gear_Objects\Gear_Servo_cpp.h"
+#include "Gear_Objects\Gear_HallEffect_cpp.h"
+#include "Gear_Objects\Gear_PulseDetector_cpp.h"
 
 using namespace std;
 using namespace web;
@@ -30,6 +32,8 @@ class cpp_Wrapper
 	vector<Gear_RGBLed_cpp*>* rgbLeds;
 	vector<Gear_MPU6050_cpp*>* mpus;
 	vector<Gear_Servo_cpp*>* servos;
+	vector<Gear_HallEffect_cpp*>* hallEfects;
+	vector<Gear_PulseDetector_cpp*>* pulseDetectors;
 
 #pragma endregion
 
@@ -40,12 +44,16 @@ class cpp_Wrapper
 	void CreateRGBLed(string data);
 	void CreateMpu(string data);
 	void CreateServo(string data);
+	void CreateHallEffect(string data);
+	void CreatePulseDetector(string data);
 
 	void UpdateButton(string data);
 	void UpdatePotentiometer(string data);
 	void UpdateRGBLed(string data);
 	void UpdateMpu(string data);
 	void UpdateServo(string data);
+	void UpdateHallEffect(string data);
+	void UpdatePulseDetector(string data);
 
 #pragma endregion
 	
@@ -70,6 +78,8 @@ public:
 	Gear_RGBLed_cpp* GetRGBLed(int id);
 	Gear_MPU6050_cpp* GetMPU6050(int id);
 	Gear_Servo_cpp* GetServo(int id);
+	Gear_HallEffect_cpp* GetHallEfect(int id);
+	Gear_PulseDetector_cpp* GetPulseDetector(int id);
 
 #pragma endregion
 

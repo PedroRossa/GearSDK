@@ -53,14 +53,6 @@ void UpdateObjects()
 		{
 			client.connection.SendMessage(s);
 		}
-
-		client.wrapper.GetServo(0)->SetValue(0);
-		s = client.wrapper.GetServo(0)->UpdatedJson();
-		
-		if (s != "")
-		{
-			client.connection.SendMessage(s);
-		}
 	}
 	else
 	{
@@ -73,20 +65,15 @@ void UpdateObjects()
 		{
 			client.connection.SendMessage(s);
 		}
-
-		client.wrapper.GetServo(0)->SetValue(15);
-		s = client.wrapper.GetServo(0)->UpdatedJson();
-
-		if (s != "")
-		{
-			client.connection.SendMessage(s);
-		}
 	}
+
+	//TODO: need a timer here!
+	this_thread::sleep_for(chrono::milliseconds(20));
 }
 
 int main()
 {
-	client = Cpp_Client("192.168.43.36", 81);
+	client = Cpp_Client("192.168.15.9", 81);
 
 	client.Init();
 

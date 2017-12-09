@@ -9,6 +9,8 @@ cpp_Wrapper::cpp_Wrapper()
 	this->rgbLeds = new vector<Gear_RGBLed_cpp*>();
 	this->mpus = new vector<Gear_MPU6050_cpp*>();
 	this->servos = new vector<Gear_Servo_cpp*>();
+	this->hallEfects = new vector<Gear_HallEffect_cpp*>();
+	this->pulseDetectors = new vector<Gear_PulseDetector_cpp*>();
 }
 
 cpp_Wrapper::~cpp_Wrapper()
@@ -60,7 +62,7 @@ void cpp_Wrapper::CreatePotentiometer(string data)
 		string pin = utility::conversions::to_utf8string(jsonPot.at(U("pin")).as_string());
 		int value = jsonPot.at(U("value")).as_integer();
 
-		Gear_Potentiometer_cpp* pot = new Gear_Potentiometer_cpp(this->buttons->size(), name, pin, value);
+		Gear_Potentiometer_cpp* pot = new Gear_Potentiometer_cpp(this->potentiometers->size(), name, pin, value);
 		this->potentiometers->push_back(pot);
 	}
 	catch (const std::exception& e)
@@ -171,6 +173,54 @@ void cpp_Wrapper::CreateServo(string data)
 		Gear_Servo_cpp* serv = new Gear_Servo_cpp(this->servos->size(), name, pin, value);
 
 		this->servos->push_back(serv);
+	}
+	catch (const std::exception& e)
+	{
+		cout << "Exception: " << e.what() << endl;
+	}
+}
+
+void cpp_Wrapper::CreateHallEffect(string data)
+{
+	this->jsonValue = StringToJson(data);
+
+	if (this->jsonValue == NULL)
+		return;
+
+	try
+	{
+		auto jsonHall = this->jsonValue.at(U("hallEffect"));
+
+		string name = utility::conversions::to_utf8string(jsonHall.at(U("name")).as_string());
+		string pin = utility::conversions::to_utf8string(jsonHall.at(U("pin")).as_string());
+		int value = jsonHall.at(U("value")).as_integer();
+
+		Gear_HallEffect_cpp* hallEffect = new Gear_HallEffect_cpp(this->hallEfects->size(), name, pin, value);
+		this->hallEfects->push_back(hallEffect);
+	}
+	catch (const std::exception& e)
+	{
+		cout << "Exception: " << e.what() << endl;
+	}
+}
+
+void cpp_Wrapper::CreatePulseDetector(string data)
+{
+	this->jsonValue = StringToJson(data);
+
+	if (this->jsonValue == NULL)
+		return;
+
+	try
+	{
+		auto jsonPulse = this->jsonValue.at(U("pulseDetector"));
+
+		string name = utility::conversions::to_utf8string(jsonPulse.at(U("name")).as_string());
+		string pin = utility::conversions::to_utf8string(jsonPulse.at(U("pin")).as_string());
+		int value = jsonPulse.at(U("value")).as_integer();
+
+		Gear_PulseDetector_cpp* pulse = new Gear_PulseDetector_cpp(this->pulseDetectors->size(), name, pin, value);
+		this->pulseDetectors->push_back(pulse);
 	}
 	catch (const std::exception& e)
 	{
@@ -354,6 +404,64 @@ void cpp_Wrapper::UpdateServo(string data)
 	}
 }
 
+void cpp_Wrapper::UpdateHallEffect(string data)
+{
+	this->jsonValue = StringToJson(data);
+
+	if (this->jsonValue == NULL)
+		return;
+
+	try
+	{
+		auto jsonHall = this->jsonValue.at(U("hallEffect"));
+
+		string objName = utility::conversions::to_utf8string(jsonHall.at(U("name")).as_string());
+		int value = jsonHall.at(U("value")).as_integer();
+
+		for (size_t i = 0; i < this->hallEfects->size(); i++)
+		{
+			string name = this->hallEfects->at(i)->GetName();
+			if (name == objName)
+			{
+				this->hallEfects->at(i)->SetValue(value);
+			}
+		}
+	}
+	catch (const std::exception& e)
+	{
+		cout << "Exception: " << e.what() << endl;
+	}
+}
+
+void cpp_Wrapper::UpdatePulseDetector(string data)
+{
+	this->jsonValue = StringToJson(data);
+
+	if (this->jsonValue == NULL)
+		return;
+
+	try
+	{
+		auto jsonPulse = this->jsonValue.at(U("pulseDetector"));
+
+		string objName = utility::conversions::to_utf8string(jsonPulse.at(U("name")).as_string());
+		int value = jsonPulse.at(U("value")).as_integer();
+
+		for (size_t i = 0; i < this->pulseDetectors->size(); i++)
+		{
+			string name = this->pulseDetectors->at(i)->GetName();
+			if (name == objName)
+			{
+				this->pulseDetectors->at(i)->SetValue(value);
+			}
+		}
+	}
+	catch (const std::exception& e)
+	{
+		cout << "Exception: " << e.what() << endl;
+	}
+}
+
 #pragma endregion
 
 #pragma region Gets and Sets
@@ -368,6 +476,8 @@ Gear_Potentiometer_cpp* cpp_Wrapper::GetPotentiometer(int id) { return this->pot
 Gear_RGBLed_cpp* cpp_Wrapper::GetRGBLed(int id) { return this->rgbLeds->at(id); }
 Gear_MPU6050_cpp* cpp_Wrapper::GetMPU6050(int id) { return this->mpus->at(id); }
 Gear_Servo_cpp* cpp_Wrapper::GetServo(int id) { return this->servos->at(id); }
+Gear_HallEffect_cpp* cpp_Wrapper::GetHallEfect(int id) { return this->hallEfects->at(id); }
+Gear_PulseDetector_cpp* cpp_Wrapper::GetPulseDetector(int id) { return this->pulseDetectors->at(id); }
 
 #pragma endregion
 
@@ -427,9 +537,13 @@ void cpp_Wrapper::Init(string header)
 				else if (jsons[i].find("rgb_led") != std::string::npos)
 					CreateRGBLed(jsons[i]);
 				else if (jsons[i].find("mpu") != std::string::npos)
-					CreateMpu(jsons[i]); 
+					CreateMpu(jsons[i]);
 				else if (jsons[i].find("servo") != std::string::npos)
 					CreateServo(jsons[i]);
+				else if (jsons[i].find("hallEffect") != std::string::npos)
+					CreateHallEffect(jsons[i]);
+				else if (jsons[i].find("pulseDetector") != std::string::npos)
+					CreatePulseDetector(jsons[i]);
 			}
 
 			this->headerSetted = true;
@@ -461,9 +575,13 @@ void cpp_Wrapper::UpdateObjects(string data)
 					else if (jsons[i].find("rgb_led") != std::string::npos)
 						UpdateRGBLed(jsons[i]);
 					else if (jsons[i].find("mpu") != std::string::npos)
-						UpdateMpu(jsons[i]); 
+						UpdateMpu(jsons[i]);
 					else if (jsons[i].find("servo") != std::string::npos)
 						UpdateServo(jsons[i]);
+					else if (jsons[i].find("hallEffect") != std::string::npos)
+						UpdateHallEffect(jsons[i]);
+					else if (jsons[i].find("pulseDetector") != std::string::npos)
+						UpdatePulseDetector(jsons[i]);
 				}
 			}
 		}
