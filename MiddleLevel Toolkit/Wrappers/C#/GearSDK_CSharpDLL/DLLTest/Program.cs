@@ -11,7 +11,7 @@ namespace DLLTest
     {
         static void Main(string[] args)
         {
-            csharp_Client client = GearSDK.CreateClient("192.168.43.36", 81);
+            csharp_Client client = GearSDK.CreateClient("192.168.15.9", 81);
 
             client.Init();
 

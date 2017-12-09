@@ -51,8 +51,10 @@
     <Compile Include="GearSDK_CSharp\csharp_Connection.cs" />
     <Compile Include="GearSDK_CSharp\csharp_Wrapper.cs" />
     <Compile Include="GearSDK_CSharp\Gear_Objects\Gear_Button_csharp.cs" />
+    <Compile Include="GearSDK_CSharp\Gear_Objects\Gear_HallEffect_csharp.cs" />
     <Compile Include="GearSDK_CSharp\Gear_Objects\Gear_MPU6050_csharp.cs" />
     <Compile Include="GearSDK_CSharp\Gear_Objects\Gear_Potentiometer_csharp.cs" />
+    <Compile Include="GearSDK_CSharp\Gear_Objects\Gear_PulseDetector_csharp.cs" />
     <Compile Include="GearSDK_CSharp\Gear_Objects\Gear_RGBLed_csharp.cs" />
     <Compile Include="GearSDK_CSharp\Gear_Objects\Gear_Servo_Csharp.cs" />
     <Compile Include="GearSDK_CSharp\Helper.cs" />

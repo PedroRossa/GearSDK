@@ -13,11 +13,13 @@ namespace GearSDK_CSharpDLL
 
         bool headerSetted = false;
 
-        List<Gear_Objects.Gear_Button_csharp> buttons;
-        List<Gear_Objects.Gear_Potentiometer_csharp> potentiometers;
-        List<Gear_Objects.Gear_RGBLed_csharp> rgbLeds;
-        List<Gear_Objects.Gear_MPU6050_csharp> mpus;
-        List<Gear_Objects.Gear_Servo_csharp> servos;
+        List<Gear_Button_csharp> buttons;
+        List<Gear_Potentiometer_csharp> potentiometers;
+        List<Gear_RGBLed_csharp> rgbLeds;
+        List<Gear_MPU6050_csharp> mpus;
+        List<Gear_Servo_csharp> servos;
+        List<Gear_HallEffect_csharp> hallEffects;
+        List<Gear_PulseDetector_csharp> pulseDetectors;
 
         #endregion
 
@@ -90,6 +92,30 @@ namespace GearSDK_CSharpDLL
 
             this.servos.Add(serv);
             return serv;
+        }
+
+        Gear_HallEffect_csharp CreateHallEffect(Json.HallEffect.Header jData)
+        {
+            string name = jData.name;
+            string pin = jData.pin;
+            int value = jData.value;
+
+            Gear_HallEffect_csharp hall = new Gear_HallEffect_csharp(this.hallEffects.Count, name, pin, value);
+
+            this.hallEffects.Add(hall);
+            return hall;
+        }
+
+        Gear_PulseDetector_csharp CreatePulseDetector(Json.PulseDetector.Header jData)
+        {
+            string name = jData.name;
+            string pin = jData.pin;
+            int value = jData.value;
+
+            Gear_PulseDetector_csharp pulse = new Gear_PulseDetector_csharp(this.pulseDetectors.Count, name, pin, value);
+
+            this.pulseDetectors.Add(pulse);
+            return pulse;
         }
 
 
@@ -166,17 +192,51 @@ namespace GearSDK_CSharpDLL
             return false;
         }
 
+        bool UpdateHallEffect(Json.HallEffect.Data jData)
+        {
+            string name = jData.name;
+            int value = jData.value;
+
+            for (int i = 0; i < this.hallEffects.Count; i++)
+            {
+                if (this.hallEffects[i].Name == name)
+                {
+                    this.hallEffects[i].Value = value;
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        bool UpdatePulseDetector(Json.PulseDetector.Data jData)
+        {
+            string name = jData.name;
+            int value = jData.value;
+
+            for (int i = 0; i < this.pulseDetectors.Count; i++)
+            {
+                if (this.pulseDetectors[i].Name == name)
+                {
+                    this.pulseDetectors[i].Value = value;
+                    return true;
+                }
+            }
+            return false;
+        }
+
         #endregion
 
         #region Constructors
 
         public csharp_Wrapper()
         {
-            this.buttons = new List<Gear_Objects.Gear_Button_csharp>();
-            this.potentiometers = new List<Gear_Objects.Gear_Potentiometer_csharp>();
-            this.mpus = new List<Gear_Objects.Gear_MPU6050_csharp>();
-            this.rgbLeds = new List<Gear_Objects.Gear_RGBLed_csharp>();
-            this.servos = new List<Gear_Objects.Gear_Servo_csharp>();
+            this.buttons = new List<Gear_Button_csharp>();
+            this.potentiometers = new List<Gear_Potentiometer_csharp>();
+            this.mpus = new List<Gear_MPU6050_csharp>();
+            this.rgbLeds = new List<Gear_RGBLed_csharp>();
+            this.servos = new List<Gear_Servo_csharp>();
+            this.hallEffects = new List<Gear_HallEffect_csharp>();
+            this.pulseDetectors = new List<Gear_PulseDetector_csharp>();
         }
 
         #endregion
@@ -191,6 +251,8 @@ namespace GearSDK_CSharpDLL
         public List<Gear_RGBLed_csharp> RgbLeds { get => rgbLeds; }
         public List<Gear_MPU6050_csharp> Mpus { get => mpus; }
         public List<Gear_Servo_csharp> Servos { get => servos; }
+        public List<Gear_HallEffect_csharp> HallEffects { get => hallEffects; }
+        public List<Gear_PulseDetector_csharp> PulseDetctors { get => pulseDetectors; }
 
         #endregion
 
@@ -235,8 +297,20 @@ namespace GearSDK_CSharpDLL
                             //-------- SERVO ------------
                             else if (jsonHeaders[i].Contains("servo"))
                             {
-                                Json.Servo.Root_Header rh = JsonConvert.DeserializeObject <Json.Servo.Root_Header>(jsonHeaders[i]);
+                                Json.Servo.Root_Header rh = JsonConvert.DeserializeObject<Json.Servo.Root_Header>(jsonHeaders[i]);
                                 CreateServo(rh.servo);
+                            }
+                            //-------- HALL EFFECT ------------
+                            else if (jsonHeaders[i].Contains("hallEffect"))
+                            {
+                                Json.HallEffect.Root_Header rh = JsonConvert.DeserializeObject<Json.HallEffect.Root_Header>(jsonHeaders[i]);
+                                CreateHallEffect(rh.hallEffect);
+                            }
+                            //-------- PULSE DETECTOR ------------
+                            else if (jsonHeaders[i].Contains("pulseDetector"))
+                            {
+                                Json.PulseDetector.Root_Header rh = JsonConvert.DeserializeObject<Json.PulseDetector.Root_Header>(jsonHeaders[i]);
+                                CreatePulseDetector(rh.pulseDetector);
                             }
                         }
                         catch (Exception e)
@@ -293,10 +367,22 @@ namespace GearSDK_CSharpDLL
                                 UpdateMPU(rd.mpu);
                             }
                             //-------- SERVO ------------
-                            if (jsonDatas[i].Contains("<MY_OBJECT_TAG>"))
+                            if (jsonDatas[i].Contains("servo"))
                             {
                                 Json.Servo.Root_Data rd = JsonConvert.DeserializeObject<Json.Servo.Root_Data>(jsonDatas[i]);
                                 UpdateServo(rd.servo);
+                            }
+                            //-------- HALL EFFECT ------------
+                            if (jsonDatas[i].Contains("hallEffect"))
+                            {
+                                Json.HallEffect.Root_Data rd = JsonConvert.DeserializeObject<Json.HallEffect.Root_Data>(jsonDatas[i]);
+                                UpdateHallEffect(rd.hallEffect);
+                            }
+                            //-------- PULSE DETECTOR ------------
+                            if (jsonDatas[i].Contains("pulseDetector"))
+                            {
+                                Json.PulseDetector.Root_Data rd = JsonConvert.DeserializeObject<Json.PulseDetector.Root_Data>(jsonDatas[i]);
+                                UpdatePulseDetector(rd.pulseDetector);
                             }
                         }
                         catch (Exception e)
