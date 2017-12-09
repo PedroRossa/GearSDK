@@ -62,7 +62,6 @@ namespace Json.<MY_OBJECT>
         public string name { get; set; }
         public string pin { get; set; }
         public int value { get; set; }
-        public int type { get; set; }
     }
 
     public class Root_Header
@@ -73,7 +72,7 @@ namespace Json.<MY_OBJECT>
     public class Data
     {
         public string name { get; set; }
-        public int state { get; set; }
+        public int value { get; set; }
     }
 
     public class Root_Data
