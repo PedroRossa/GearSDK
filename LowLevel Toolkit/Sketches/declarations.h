@@ -10,11 +10,9 @@
 
 
 // Definições da rede Wifi
-//char* SSID = "MILIOPA";
-//char* PASSWORD = "balapacaraio@2017";
 
-char* SSID = "teste";
-char* PASSWORD = "12345678";
+char* SSID = "MILIOPA";
+char* PASSWORD = "balapacaraio@2017";
 
 const int MPU_ADDR = 0x68;
 
